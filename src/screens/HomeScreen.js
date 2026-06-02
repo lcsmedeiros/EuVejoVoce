@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   View, Text, StyleSheet, ActivityIndicator,
-  TouchableOpacity, TextInput, Alert, ScrollView, Share,
+  TouchableOpacity, TextInput, Alert,
+  ScrollView, Keyboard,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import * as Location from 'expo-location';
@@ -10,7 +11,6 @@ import { salvarLocalizacao } from '../database/db';
 const MAX_LEITURAS = 5;
 
 function mediasPonderadas(leituras) {
-  // Leituras com menor accuracy (mais precisas) recebem mais peso
   const pesos = leituras.map(r => r.accuracy ? 1 / r.accuracy : 1);
   const totalPeso = pesos.reduce((s, p) => s + p, 0);
   return {
@@ -30,10 +30,21 @@ export default function HomeScreen({ onVerMapa, onVerHistorico }) {
   const [numLeituras, setNumLeituras] = useState(0);
   const watchRef = useRef(null);
   const leiturasRef = useRef([]);
+  const scrollRef = useRef(null);
+  const [kbPadding, setKbPadding] = useState(0);
 
   useEffect(() => {
     iniciar();
     return () => { if (watchRef.current) watchRef.current.remove(); };
+  }, []);
+
+  useEffect(() => {
+    const show = Keyboard.addListener('keyboardDidShow', e => {
+      setKbPadding(e.endCoordinates.height);
+      setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 100);
+    });
+    const hide = Keyboard.addListener('keyboardDidHide', () => setKbPadding(0));
+    return () => { show.remove(); hide.remove(); };
   }, []);
 
   async function iniciar() {
@@ -45,19 +56,13 @@ export default function HomeScreen({ onVerMapa, onVerHistorico }) {
     }
 
     watchRef.current = await Location.watchPositionAsync(
-      {
-        accuracy: Location.Accuracy.BestForNavigation,
-        timeInterval: 1000,
-        distanceInterval: 0,
-      },
+      { accuracy: Location.Accuracy.BestForNavigation, timeInterval: 1000, distanceInterval: 0 },
       async (loc) => {
-        // Acumula leituras e calcula média ponderada
         leiturasRef.current = [...leiturasRef.current.slice(-(MAX_LEITURAS - 1)), loc.coords];
         const media = mediasPonderadas(leiturasRef.current);
         setCoords(media);
         setNumLeituras(leiturasRef.current.length);
         setAguardando(false);
-
         try {
           const [end] = await Location.reverseGeocodeAsync(loc.coords);
           setEndereco(end);
@@ -90,138 +95,218 @@ export default function HomeScreen({ onVerMapa, onVerHistorico }) {
     }
   }
 
-  async function compartilhar() {
-    if (!coords) return;
-    const url = `https://maps.google.com/?q=${coords.latitude},${coords.longitude}`;
-    const endStr = endereco
-      ? [endereco.street, endereco.district, endereco.city].filter(Boolean).join(', ') + '\n'
-      : '';
-    await Share.share({ message: `${endStr}${url}` });
-  }
-
   const estabilizando = numLeituras < MAX_LEITURAS;
   const boaSinal = coords?.accuracy != null && coords.accuracy <= 10;
 
   return (
-    <ScrollView style={s.container} contentContainerStyle={{ paddingBottom: 40 }}>
+    <ScrollView ref={scrollRef} style={s.container} contentContainerStyle={{ paddingBottom: 40 + kbPadding }} keyboardShouldPersistTaps="handled">
       <StatusBar style="light" />
-      <Text style={s.titulo}>Eu Vejo Você</Text>
+
+      <View style={s.headerBox}>
+        <Text style={s.titulo}>EU VEJO VOCÊ</Text>
+        <Text style={s.subtitulo}>SISTEMA DE RASTREIO TÁTICO</Text>
+        <View style={s.headerLine} />
+      </View>
 
       {aguardando && (
         <View style={s.row}>
-          <ActivityIndicator color="#e94560" />
-          <Text style={s.info}>  Aguardando GPS...</Text>
+          <ActivityIndicator color="#00e5ff" size="small" />
+          <Text style={s.info}>  ADQUIRINDO SINAL GPS...</Text>
         </View>
       )}
 
       {coords && (
         <View style={s.card}>
-          {endereco ? (
-            <Text style={s.endereco}>
-              {[endereco.street, endereco.district, endereco.city].filter(Boolean).join(', ')}
-            </Text>
-          ) : (
-            <Text style={s.enderecoCarregando}>Carregando endereço...</Text>
-          )}
+
+          {/* Cabeçalho com status */}
+          <View style={s.cardHeaderRow}>
+            <Text style={s.cardHeader}>◎  POSIÇÃO DO OPERADOR</Text>
+            <View style={s.statusBadge}>
+              <View style={[s.statusDot, { backgroundColor: estabilizando ? '#ffd60a' : boaSinal ? '#00ff9f' : '#ff2d55' }]} />
+              <Text style={[s.statusTexto, { color: estabilizando ? '#ffd60a' : boaSinal ? '#00ff9f' : '#ff2d55' }]}>
+                {estabilizando ? 'CALIBRANDO' : boaSinal ? 'ONLINE' : 'STANDBY'}
+              </Text>
+            </View>
+          </View>
+
+          {/* Endereço */}
+          <View style={s.enderecoRow}>
+            <Text style={s.enderecoIcon}>▸</Text>
+            {endereco
+              ? <Text style={s.endereco}>{[endereco.street, endereco.district, endereco.city].filter(Boolean).join(', ')}</Text>
+              : <Text style={s.enderecoCarregando}>DECODIFICANDO ENDEREÇO...</Text>
+            }
+          </View>
+
+          {/* Seção: Coordenadas */}
+          <View style={s.secRow}>
+            <Text style={s.secLabel}>COORDENADAS</Text>
+            <View style={s.secLine} />
+          </View>
 
           <View style={s.coordRow}>
-            <Text style={s.label}>Latitude</Text>
+            <Text style={s.dataLabel}>LAT</Text>
             <Text style={s.valor}>{coords.latitude.toFixed(8)}</Text>
           </View>
           <View style={s.coordRow}>
-            <Text style={s.label}>Longitude</Text>
+            <Text style={s.dataLabel}>LNG</Text>
             <Text style={s.valor}>{coords.longitude.toFixed(8)}</Text>
           </View>
-          {coords.altitude != null && (
-            <View style={s.coordRow}>
-              <Text style={s.label}>Altitude</Text>
-              <Text style={s.valor}>{coords.altitude.toFixed(1)} m</Text>
-            </View>
-          )}
-          <View style={s.coordRow}>
-            <Text style={s.label}>Precisão</Text>
-            <Text style={[s.valor, { color: boaSinal ? '#4caf50' : '#e94560' }]}>
-              ± {coords.accuracy.toFixed(1)} m
-            </Text>
+
+          {/* Seção: Telemetria */}
+          <View style={[s.secRow, { marginTop: 12 }]}>
+            <Text style={s.secLabel}>TELEMETRIA</Text>
+            <View style={s.secLine} />
           </View>
+
+          <View style={s.telRow}>
+            {coords.altitude != null && (
+              <View style={s.telItem}>
+                <Text style={s.dataLabel}>ALT</Text>
+                <Text style={s.valor}>{coords.altitude.toFixed(1)} m</Text>
+              </View>
+            )}
+            <View style={s.telItem}>
+              <Text style={s.dataLabel}>PREC</Text>
+              <Text style={[s.valor, { color: boaSinal ? '#00ff9f' : '#ff2d55' }]}>
+                ± {coords.accuracy.toFixed(1)} m
+              </Text>
+            </View>
+          </View>
+
+          {/* Status do sinal */}
+          <View style={s.separador} />
 
           <View style={s.sinalRow}>
             {estabilizando ? (
               <>
-                <ActivityIndicator size="small" color="#a2a8d3" />
-                <Text style={s.sinalTexto}>  Estabilizando... ({numLeituras}/{MAX_LEITURAS})</Text>
+                <View style={s.progressRow}>
+                  {Array.from({ length: MAX_LEITURAS }).map((_, i) => (
+                    <View key={i} style={[s.progressBlock, i < numLeituras && s.progressBlockFilled]} />
+                  ))}
+                </View>
+                <Text style={s.calibrando}>ADQUIRINDO ALVO... {numLeituras}/{MAX_LEITURAS}</Text>
               </>
             ) : (
-              <Text style={[s.sinalTexto, { color: boaSinal ? '#4caf50' : '#e94560' }]}>
-                {boaSinal ? 'Sinal estável e preciso' : 'Sinal fraco — aguarde melhorar'}
+              <Text style={[s.sinalTexto, { color: boaSinal ? '#00ff9f' : '#ff2d55' }]}>
+                {boaSinal ? '⊕ SATÉLITE CALIBRADO' : '▲ SINAL INSTÁVEL — AGUARDE'}
               </Text>
             )}
           </View>
+
         </View>
       )}
 
       <TextInput
         style={s.input}
-        placeholder="Rótulo (ex: Casa, Trabalho...)"
-        placeholderTextColor="#6b7aa1"
+        placeholder="CODINOME DO ALVO..."
+        placeholderTextColor="#2a4060"
         value={label}
         onChangeText={setLabel}
       />
 
       <TouchableOpacity
-        style={[s.botao, (!coords || salvando || estabilizando) && { opacity: 0.5 }]}
+        style={[s.botao, (!coords || salvando || estabilizando) && { opacity: 0.35 }]}
         onPress={salvar}
         disabled={!coords || salvando || estabilizando}
       >
         {salvando
-          ? <ActivityIndicator color="#fff" />
+          ? <ActivityIndicator color="#07090f" />
           : <Text style={s.botaoTexto}>
-              {estabilizando ? 'Aguarde estabilizar...' : 'Salvar Localização'}
+              {estabilizando ? 'ADQUIRINDO ALVO...' : 'MARCAR ALVO'}
             </Text>
         }
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={[s.botao, s.botaoSec, !coords && { opacity: 0.5 }]}
-        onPress={compartilhar}
-        disabled={!coords}
-      >
-        <Text style={[s.botaoTexto, { color: '#e94560' }]}>Compartilhar Localização</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={[s.botao, s.botaoSec, !coords && { opacity: 0.5 }]}
+        style={[s.botaoSec, !coords && { opacity: 0.35 }]}
         onPress={() => onVerMapa(coords)}
         disabled={!coords}
       >
-        <Text style={[s.botaoTexto, { color: '#e94560' }]}>Ver no Mapa</Text>
+        <Text style={s.botaoSecTexto}>MARCAR ALVO MANUALMENTE</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={[s.botao, s.botaoSec]} onPress={onVerHistorico}>
-        <Text style={[s.botaoTexto, { color: '#e94560' }]}>Ver Histórico</Text>
+      <TouchableOpacity style={s.botaoSec} onPress={onVerHistorico}>
+        <Text style={s.botaoSecTexto}>HISTÓRICO DE ALVOS</Text>
       </TouchableOpacity>
     </ScrollView>
   );
 }
 
 const s = StyleSheet.create({
-  container:          { flex: 1, backgroundColor: '#1a1a2e', padding: 24 },
-  titulo:             { fontSize: 28, fontWeight: 'bold', color: '#e94560', marginTop: 48, marginBottom: 24 },
-  row:                { flexDirection: 'row', alignItems: 'center', marginBottom: 16 },
-  info:               { color: '#a2a8d3', fontSize: 15 },
-  card:               { backgroundColor: '#16213e', borderRadius: 16, padding: 20, marginBottom: 20 },
-  endereco:           { color: '#fff', fontSize: 15, fontWeight: '600', marginBottom: 12 },
-  enderecoCarregando: { color: '#6b7aa1', fontSize: 13, marginBottom: 12 },
-  coordRow:           { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 },
-  label:              { color: '#a2a8d3', fontSize: 14 },
-  valor:              { color: '#eee', fontSize: 14, fontWeight: '600', fontFamily: 'monospace' },
-  sinalRow:           { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 10 },
-  sinalTexto:         { color: '#a2a8d3', fontSize: 13, fontWeight: '600' },
-  input: {
-    backgroundColor: '#0f3460', borderRadius: 12, padding: 16,
-    fontSize: 16, color: '#eee', marginBottom: 12,
+  container:    { flex: 1, backgroundColor: '#07090f', padding: 24 },
+
+  headerBox:    { marginTop: 48, marginBottom: 24 },
+  titulo:       { fontSize: 22, fontWeight: '900', color: '#00e5ff', letterSpacing: 4 },
+  subtitulo:    { fontSize: 10, color: '#2a4060', letterSpacing: 3, marginTop: 4, marginBottom: 10 },
+  headerLine:   { height: 1, backgroundColor: 'rgba(0, 229, 255, 0.2)' },
+
+  row:          { flexDirection: 'row', alignItems: 'center', marginBottom: 16 },
+  info:         { color: '#00e5ff', fontSize: 12, fontFamily: 'monospace', letterSpacing: 1 },
+
+  card: {
+    backgroundColor: '#0b1019',
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: 'rgba(0, 229, 255, 0.15)',
+    borderLeftWidth: 3,
+    borderLeftColor: '#00e5ff',
+    padding: 20,
+    marginBottom: 20,
   },
-  botao:      { backgroundColor: '#e94560', padding: 16, borderRadius: 12, alignItems: 'center', marginBottom: 12 },
-  botaoSec:   { backgroundColor: 'transparent', borderWidth: 2, borderColor: '#e94560' },
-  botaoTexto: { color: '#fff', fontSize: 16, fontWeight: '600' },
+  cardHeaderRow:      { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
+  cardHeader:         { fontSize: 10, color: '#00e5ff', letterSpacing: 3, fontFamily: 'monospace', opacity: 0.7 },
+  statusBadge:        { flexDirection: 'row', alignItems: 'center', gap: 5 },
+  statusDot:          { width: 6, height: 6, borderRadius: 3 },
+  statusTexto:        { fontSize: 9, fontFamily: 'monospace', letterSpacing: 1, fontWeight: '900' },
+
+  enderecoRow:        { flexDirection: 'row', alignItems: 'flex-start', gap: 6, marginBottom: 12 },
+  enderecoIcon:       { color: '#00e5ff', fontSize: 12, marginTop: 1, opacity: 0.6 },
+  endereco:           { color: '#c5dce8', fontSize: 13, fontWeight: '600', flex: 1 },
+  enderecoCarregando: { color: '#2a4060', fontSize: 11, fontFamily: 'monospace', letterSpacing: 1, flex: 1 },
+
+  secRow:       { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 8 },
+  secLabel:     { color: '#2a4060', fontSize: 9, letterSpacing: 2, fontFamily: 'monospace' },
+  secLine:      { flex: 1, height: 1, backgroundColor: 'rgba(0, 229, 255, 0.08)' },
+
+  separador:    { height: 1, backgroundColor: 'rgba(0, 229, 255, 0.08)', marginVertical: 12 },
+  coordRow:     { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
+  dataLabel:    { color: '#2a4060', fontSize: 11, letterSpacing: 2, fontFamily: 'monospace' },
+  valor:        { color: '#00e5ff', fontSize: 13, fontWeight: '700', fontFamily: 'monospace' },
+
+  telRow:       { flexDirection: 'row', gap: 16 },
+  telItem:      { flex: 1 },
+
+  sinalRow:          { alignItems: 'center', marginTop: 4 },
+  progressRow:       { flexDirection: 'row', gap: 6, marginBottom: 8 },
+  progressBlock:     { width: 28, height: 5, backgroundColor: 'rgba(0, 229, 255, 0.1)', borderRadius: 2 },
+  progressBlockFilled: { backgroundColor: '#00e5ff' },
+  calibrando:        { color: '#2a4060', fontSize: 10, letterSpacing: 2, fontFamily: 'monospace' },
+  sinalTexto:        { fontSize: 11, letterSpacing: 1, fontFamily: 'monospace', fontWeight: '700' },
+
+  input: {
+    backgroundColor: '#0a0f1a',
+    borderWidth: 1,
+    borderColor: 'rgba(0, 229, 255, 0.25)',
+    borderRadius: 4,
+    padding: 14,
+    fontSize: 13,
+    color: '#c5dce8',
+    marginBottom: 12,
+    fontFamily: 'monospace',
+    letterSpacing: 1,
+  },
+
+  botao:        { backgroundColor: '#00e5ff', padding: 15, borderRadius: 4, alignItems: 'center', marginBottom: 10 },
+  botaoTexto:   { color: '#07090f', fontSize: 12, fontWeight: '900', letterSpacing: 2 },
+  botaoSec: {
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: 'rgba(0, 229, 255, 0.3)',
+    borderRadius: 4,
+    padding: 15,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  botaoSecTexto: { color: '#00e5ff', fontSize: 12, fontWeight: '700', letterSpacing: 2 },
 });

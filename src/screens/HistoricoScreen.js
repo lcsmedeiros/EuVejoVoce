@@ -30,26 +30,36 @@ export default function HistoricoScreen({ onBack, onVerNoMapa }) {
     ]);
   }
 
+  function eliminar(item) {
+    onVerNoMapa(
+      { latitude: item.latitude, longitude: item.longitude },
+      { latitude: item.latitude, longitude: item.longitude, label: item.label || '' }
+    );
+  }
+
   return (
     <View style={s.container}>
       <View style={s.header}>
         <TouchableOpacity onPress={onBack}>
-          <Text style={s.voltar}>← Voltar</Text>
+          <Text style={s.voltar}>← VOLTAR</Text>
         </TouchableOpacity>
-        <Text style={s.titulo}>Histórico</Text>
-        <Text style={s.contagem}>{registros.length} registro(s)</Text>
+        <Text style={s.titulo}>ALVOS MARCADOS</Text>
+        <Text style={s.contagem}>{registros.length} ALVO(S) CONFIRMADO(S)</Text>
+        <View style={s.headerLine} />
       </View>
 
       <FlatList
         data={registros}
         keyExtractor={(item) => String(item.id)}
-        refreshControl={<RefreshControl refreshing={carregando} onRefresh={carregar} tintColor="#e94560" />}
+        refreshControl={<RefreshControl refreshing={carregando} onRefresh={carregar} tintColor="#00e5ff" />}
         contentContainerStyle={{ paddingBottom: 32 }}
-        ListEmptyComponent={<Text style={s.vazio}>Nenhuma localização salva ainda.</Text>}
+        ListEmptyComponent={
+          <Text style={s.vazio}>[ NENHUM ALVO MARCADO ]</Text>
+        }
         renderItem={({ item }) => (
           <View style={s.card}>
             <View style={s.cardTopo}>
-              <Text style={s.rotulo}>{item.label || '(sem rótulo)'}</Text>
+              <Text style={s.rotulo}>{item.label || '(SEM IDENTIFICAÇÃO)'}</Text>
               <TouchableOpacity onPress={() => confirmarDeletar(item.id)}>
                 <Text style={s.deletar}>✕</Text>
               </TouchableOpacity>
@@ -57,28 +67,31 @@ export default function HistoricoScreen({ onBack, onVerNoMapa }) {
 
             {!!item.endereco && <Text style={s.endereco}>{item.endereco}</Text>}
 
+            <View style={s.separador} />
+
             <Text style={s.coords}>
               {item.latitude.toFixed(6)}, {item.longitude.toFixed(6)}
             </Text>
 
-            {item.accuracy != null && (
-              <Text style={s.meta}>Precisão: ± {item.accuracy.toFixed(1)} m</Text>
-            )}
-
-            <Text style={s.data}>{new Date(item.timestamp).toLocaleString('pt-BR')}</Text>
+            <View style={s.metaRow}>
+              {item.accuracy != null && (
+                <Text style={s.meta}>PREC ± {item.accuracy.toFixed(1)} m</Text>
+              )}
+              <Text style={s.data}>{new Date(item.timestamp).toLocaleString('pt-BR')}</Text>
+            </View>
 
             <View style={s.acoes}>
               <TouchableOpacity
-                style={[s.botaoAcao, { flex: 1, marginRight: 8 }]}
-                onPress={() => onVerNoMapa({ latitude: item.latitude, longitude: item.longitude })}
+                style={[s.botaoAcao, { flex: 1, marginRight: 8 }, { borderColor: 'rgba(255,45,85,0.4)' }]}
+                onPress={() => eliminar(item)}
               >
-                <Text style={s.botaoAcaoTexto}>Ver no Mapa</Text>
+                <Text style={[s.botaoAcaoTexto, { color: '#ff2d55' }]}>ELIMINAR</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[s.botaoAcao, { flex: 1 }]}
                 onPress={() => compartilhar(item)}
               >
-                <Text style={s.botaoAcaoTexto}>Compartilhar</Text>
+                <Text style={s.botaoAcaoTexto}>COMPARTILHAR</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -89,27 +102,43 @@ export default function HistoricoScreen({ onBack, onVerNoMapa }) {
 }
 
 const s = StyleSheet.create({
-  container:    { flex: 1, backgroundColor: '#1a1a2e', paddingHorizontal: 20 },
-  header:       { paddingTop: 48, marginBottom: 20 },
-  voltar:       { color: '#a2a8d3', fontSize: 16, marginBottom: 8 },
-  titulo:       { fontSize: 24, fontWeight: 'bold', color: '#e94560' },
-  contagem:     { color: '#a2a8d3', fontSize: 13, marginTop: 4 },
-  vazio:        { color: '#6b7aa1', textAlign: 'center', marginTop: 48, fontSize: 16 },
+  container:  { flex: 1, backgroundColor: '#07090f', paddingHorizontal: 20 },
+  header:     { paddingTop: 48, marginBottom: 20 },
+  voltar:     { color: '#2a4060', fontSize: 12, marginBottom: 12, fontFamily: 'monospace', letterSpacing: 2 },
+  titulo:     { fontSize: 18, fontWeight: '900', color: '#00e5ff', letterSpacing: 3, marginBottom: 4 },
+  contagem:   { color: '#2a4060', fontSize: 10, letterSpacing: 2, fontFamily: 'monospace', marginBottom: 10 },
+  headerLine: { height: 1, backgroundColor: 'rgba(0, 229, 255, 0.2)' },
+  vazio:      { color: '#2a4060', textAlign: 'center', marginTop: 48, fontSize: 12, fontFamily: 'monospace', letterSpacing: 1 },
+
   card: {
-    backgroundColor: '#16213e', borderRadius: 16,
-    padding: 16, marginBottom: 12, elevation: 4,
+    backgroundColor: '#0b1019',
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: 'rgba(0, 229, 255, 0.12)',
+    borderLeftWidth: 3,
+    borderLeftColor: '#00e5ff',
+    padding: 16,
+    marginBottom: 10,
   },
-  cardTopo:     { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 },
-  rotulo:       { color: '#fff', fontWeight: '700', fontSize: 16, flex: 1 },
-  deletar:      { color: '#e94560', fontSize: 18, paddingLeft: 8 },
-  endereco:     { color: '#a2a8d3', fontSize: 13, marginBottom: 4 },
-  coords:       { color: '#eee', fontFamily: 'monospace', fontSize: 13, marginBottom: 4 },
-  meta:         { color: '#a2a8d3', fontSize: 12 },
-  data:         { color: '#6b7aa1', fontSize: 12, marginTop: 4, marginBottom: 10 },
-  acoes:       { flexDirection: 'row' },
+  cardTopo:   { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 },
+  rotulo:     { color: '#c5dce8', fontWeight: '700', fontSize: 14, flex: 1, letterSpacing: 1 },
+  deletar:    { color: '#ff2d55', fontSize: 16, paddingLeft: 12 },
+  endereco:   { color: '#3a5268', fontSize: 12, marginBottom: 8 },
+  separador:  { height: 1, backgroundColor: 'rgba(0, 229, 255, 0.06)', marginVertical: 8 },
+  coords:     { color: '#00e5ff', fontFamily: 'monospace', fontSize: 12, marginBottom: 6 },
+  metaRow:    { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 },
+  meta:       { color: '#2a4060', fontSize: 11, fontFamily: 'monospace', letterSpacing: 1 },
+  data:       { color: '#2a4060', fontSize: 11, fontFamily: 'monospace' },
+
+  acoes:      { flexDirection: 'row' },
   botaoAcao: {
-    borderWidth: 1, borderColor: '#e94560', borderRadius: 8,
-    padding: 8, alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(0, 229, 255, 0.3)',
+    borderRadius: 4,
+    padding: 10,
+    alignItems: 'center',
   },
-  botaoAcaoTexto: { color: '#e94560', fontSize: 13, fontWeight: '600' },
+  botaoAcaoAtivo:  { borderColor: 'rgba(255, 45, 85, 0.4)' },
+  botaoAcaoTexto:  { color: '#00e5ff', fontSize: 11, fontWeight: '700', letterSpacing: 1 },
+
 });

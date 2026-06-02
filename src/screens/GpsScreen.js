@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity,
-  ActivityIndicator, Alert, ScrollView, StyleSheet,
+  ActivityIndicator, Alert, StyleSheet,
+  ScrollView, Keyboard,
 } from 'react-native';
 import * as Location from 'expo-location';
 import { salvarLocalizacao } from '../database/db';
@@ -13,6 +14,17 @@ export default function GpsScreen({ onBack, onNavigateHistorico }) {
   const [label, setLabel] = useState('');
   const [salvando, setSalvando] = useState(false);
   const watchRef = useRef(null);
+  const scrollRef = useRef(null);
+  const [kbPadding, setKbPadding] = useState(0);
+
+  useEffect(() => {
+    const show = Keyboard.addListener('keyboardDidShow', e => {
+      setKbPadding(e.endCoordinates.height);
+      setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 100);
+    });
+    const hide = Keyboard.addListener('keyboardDidHide', () => setKbPadding(0));
+    return () => { show.remove(); hide.remove(); };
+  }, []);
 
   useEffect(() => {
     iniciarRastreamento();
@@ -31,11 +43,7 @@ export default function GpsScreen({ onBack, onNavigateHistorico }) {
     }
     setStatus('watching');
     watchRef.current = await Location.watchPositionAsync(
-      {
-        accuracy: Location.Accuracy.BestForNavigation,
-        timeInterval: 1000,
-        distanceInterval: 0,
-      },
+      { accuracy: Location.Accuracy.BestForNavigation, timeInterval: 1000, distanceInterval: 0 },
       (location) => setCoords(location.coords)
     );
   }
@@ -63,45 +71,48 @@ export default function GpsScreen({ onBack, onNavigateHistorico }) {
   const boaSinal = coords && coords.accuracy != null && coords.accuracy <= 5;
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 40 }}>
+    <ScrollView ref={scrollRef} style={styles.container} contentContainerStyle={{ paddingBottom: 40 + kbPadding }} keyboardShouldPersistTaps="handled">
       <View style={styles.header}>
         <TouchableOpacity onPress={onBack}>
-          <Text style={styles.backBtn}>← Voltar</Text>
+          <Text style={styles.backBtn}>← VOLTAR</Text>
         </TouchableOpacity>
-        <Text style={styles.title}>GPS de Precisão</Text>
+        <Text style={styles.title}>GPS DE PRECISÃO</Text>
+        <View style={styles.headerLine} />
       </View>
 
       {status === 'requesting' && (
         <View style={styles.statusRow}>
-          <ActivityIndicator color="#e94560" />
-          <Text style={styles.statusText}>Solicitando permissão...</Text>
+          <ActivityIndicator color="#00e5ff" size="small" />
+          <Text style={styles.statusText}>  SOLICITANDO PERMISSÃO...</Text>
         </View>
       )}
       {status === 'watching' && !coords && (
         <View style={styles.statusRow}>
-          <ActivityIndicator color="#e94560" />
-          <Text style={styles.statusText}>Aguardando sinal GPS...</Text>
+          <ActivityIndicator color="#00e5ff" size="small" />
+          <Text style={styles.statusText}>  AGUARDANDO SINAL GPS...</Text>
         </View>
       )}
       {status === 'error' && (
-        <Text style={styles.errorText}>Permissão de localização negada.</Text>
+        <Text style={styles.errorText}>▲ PERMISSÃO DE LOCALIZAÇÃO NEGADA</Text>
       )}
 
       {coords && (
         <View style={styles.coordCard}>
-          <CoordRow label="Latitude"  value={coords.latitude.toFixed(8)} />
-          <CoordRow label="Longitude" value={coords.longitude.toFixed(8)} />
+          <Text style={styles.cardHeader}>◈  DADOS DE POSIÇÃO</Text>
+          <CoordRow label="LAT"  value={coords.latitude.toFixed(8)} />
+          <CoordRow label="LNG" value={coords.longitude.toFixed(8)} />
           <CoordRow
-            label="Altitude"
+            label="ALT"
             value={coords.altitude != null ? `${coords.altitude.toFixed(1)} m` : 'N/D'}
           />
+          <View style={styles.separador} />
           <CoordRow
-            label="Precisão"
+            label="PREC"
             value={coords.accuracy != null ? `± ${coords.accuracy.toFixed(1)} m` : 'N/D'}
             highlight={boaSinal ? 'green' : 'red'}
           />
-          <Text style={[styles.signalLabel, { color: boaSinal ? '#4caf50' : '#e94560' }]}>
-            {boaSinal ? 'Sinal excelente — pode salvar' : 'Aguardando melhor sinal...'}
+          <Text style={[styles.signalLabel, { color: boaSinal ? '#00ff9f' : '#ff2d55' }]}>
+            {boaSinal ? '● SINAL EXCELENTE — PODE SALVAR' : '▲ AGUARDANDO MELHOR SINAL...'}
           </Text>
         </View>
       )}
@@ -109,19 +120,19 @@ export default function GpsScreen({ onBack, onNavigateHistorico }) {
       <View style={styles.saveBox}>
         <TextInput
           style={styles.input}
-          placeholder="Rótulo opcional (ex: Mesa, Porta, Janela...)"
-          placeholderTextColor="#6b7aa1"
+          placeholder="RÓTULO: EX. MESA, PORTA, JANELA..."
+          placeholderTextColor="#2a4060"
           value={label}
           onChangeText={setLabel}
         />
         <TouchableOpacity
-          style={[globalStyles.button, (!coords || salvando) && { opacity: 0.5 }]}
+          style={[globalStyles.button, (!coords || salvando) && { opacity: 0.35 }]}
           onPress={handleSalvar}
           disabled={!coords || salvando}
         >
           {salvando
-            ? <ActivityIndicator color="#fff" />
-            : <Text style={globalStyles.buttonText}>Salvar Localização</Text>
+            ? <ActivityIndicator color="#07090f" />
+            : <Text style={globalStyles.buttonText}>SALVAR LOCALIZAÇÃO</Text>
           }
         </TouchableOpacity>
         <TouchableOpacity
@@ -129,7 +140,7 @@ export default function GpsScreen({ onBack, onNavigateHistorico }) {
           onPress={onNavigateHistorico}
         >
           <Text style={[globalStyles.buttonText, globalStyles.buttonTextSecondary]}>
-            Ver Histórico
+            HISTÓRICO DE ALVOS
           </Text>
         </TouchableOpacity>
       </View>
@@ -143,8 +154,8 @@ function CoordRow({ label, value, highlight }) {
       <Text style={styles.coordLabel}>{label}</Text>
       <Text style={[
         styles.coordValue,
-        highlight === 'green' && { color: '#4caf50' },
-        highlight === 'red'   && { color: '#e94560' },
+        highlight === 'green' && { color: '#00ff9f' },
+        highlight === 'red'   && { color: '#ff2d55' },
       ]}>
         {value}
       </Text>
@@ -153,24 +164,40 @@ function CoordRow({ label, value, highlight }) {
 }
 
 const styles = StyleSheet.create({
-  container:   { flex: 1, backgroundColor: '#1a1a2e', paddingHorizontal: 20 },
+  container:   { flex: 1, backgroundColor: '#07090f', paddingHorizontal: 20 },
   header:      { paddingTop: 48, marginBottom: 24 },
-  backBtn:     { color: '#a2a8d3', fontSize: 16, marginBottom: 8 },
-  title:       { fontSize: 26, fontWeight: 'bold', color: '#e94560' },
-  statusRow:   { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 16 },
-  statusText:  { color: '#a2a8d3', fontSize: 15 },
-  errorText:   { color: '#e94560', fontSize: 15, marginBottom: 16 },
+  backBtn:     { color: '#2a4060', fontSize: 12, marginBottom: 12, fontFamily: 'monospace', letterSpacing: 2 },
+  title:       { fontSize: 18, fontWeight: '900', color: '#00e5ff', letterSpacing: 3, marginBottom: 10 },
+  headerLine:  { height: 1, backgroundColor: 'rgba(0, 229, 255, 0.2)' },
+  statusRow:   { flexDirection: 'row', alignItems: 'center', marginBottom: 16 },
+  statusText:  { color: '#00e5ff', fontSize: 12, fontFamily: 'monospace', letterSpacing: 1 },
+  errorText:   { color: '#ff2d55', fontSize: 12, fontFamily: 'monospace', letterSpacing: 1, marginBottom: 16 },
   coordCard: {
-    backgroundColor: '#16213e', borderRadius: 16, padding: 20,
-    marginBottom: 24, elevation: 4,
+    backgroundColor: '#0b1019',
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: 'rgba(0, 229, 255, 0.15)',
+    borderLeftWidth: 3,
+    borderLeftColor: '#00e5ff',
+    padding: 20,
+    marginBottom: 24,
   },
-  coordRow:    { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 },
-  coordLabel:  { color: '#a2a8d3', fontSize: 14 },
-  coordValue:  { color: '#eee', fontSize: 14, fontWeight: '600', fontFamily: 'monospace' },
-  signalLabel: { textAlign: 'center', fontWeight: '600', marginTop: 8, fontSize: 13 },
-  saveBox:     { gap: 12 },
+  cardHeader:  { fontSize: 10, color: '#00e5ff', letterSpacing: 3, marginBottom: 12, fontFamily: 'monospace', opacity: 0.7 },
+  coordRow:    { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
+  coordLabel:  { color: '#2a4060', fontSize: 11, letterSpacing: 2, fontFamily: 'monospace' },
+  coordValue:  { color: '#00e5ff', fontSize: 13, fontWeight: '700', fontFamily: 'monospace' },
+  separador:   { height: 1, backgroundColor: 'rgba(0, 229, 255, 0.08)', marginVertical: 8 },
+  signalLabel: { textAlign: 'center', fontWeight: '700', marginTop: 10, fontSize: 11, fontFamily: 'monospace', letterSpacing: 1 },
+  saveBox:     { gap: 10 },
   input: {
-    backgroundColor: '#0f3460', borderRadius: 12, padding: 16,
-    fontSize: 16, color: '#eee', marginBottom: 4,
+    backgroundColor: '#0a0f1a',
+    borderWidth: 1,
+    borderColor: 'rgba(0, 229, 255, 0.25)',
+    borderRadius: 4,
+    padding: 14,
+    fontSize: 13,
+    color: '#c5dce8',
+    fontFamily: 'monospace',
+    letterSpacing: 1,
   },
 });
