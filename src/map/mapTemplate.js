@@ -19,54 +19,54 @@ export function buildMapHtml(lat, lng, salvos, alvoFoco = null) {
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #1a1a1a; }
+    body { background: #0B0F0C; }
     #map { width: 100vw; height: 100vh; }
 
     .leaflet-popup-content-wrapper {
       background: rgba(7,9,15,0.92);
       border: 1px solid rgba(255,45,85,0.6);
       border-radius: 3px;
-      color: #c5dce8;
+      color: #C2E8CE;
       font-family: monospace;
       font-size: 11px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.6), 0 0 12px rgba(255,45,85,0.2);
     }
     .leaflet-popup-tip { background: rgba(7,9,15,0.92); }
     .leaflet-control-zoom {
-      border: 1px solid rgba(0,229,255,0.3) !important;
+      border: 1px solid rgba(0, 255, 102,0.3) !important;
       box-shadow: 0 2px 8px rgba(0,0,0,0.5) !important;
     }
     .leaflet-control-zoom a {
       background: rgba(7,9,15,0.85) !important;
-      color: #00e5ff !important;
-      border-color: rgba(0,229,255,0.2) !important;
+      color: #00FF66 !important;
+      border-color: rgba(0, 255, 102,0.2) !important;
       font-family: monospace !important;
       font-weight: 900 !important;
     }
-    .leaflet-control-zoom a:hover { background: rgba(0,229,255,0.15) !important; }
+    .leaflet-control-zoom a:hover { background: rgba(0, 255, 102,0.15) !important; }
     .leaflet-control-scale-line {
       background: rgba(7,9,15,0.75);
-      border: 1px solid rgba(0,229,255,0.4);
-      border-top: 2px solid #00e5ff;
-      color: #00e5ff;
+      border: 1px solid rgba(0, 255, 102,0.4);
+      border-top: 2px solid #00FF66;
+      color: #00FF66;
       font-family: monospace;
       font-size: 9px;
       letter-spacing: 1px;
     }
     .leaflet-control-attribution {
       background: rgba(7,9,15,0.7) !important;
-      color: #2a3a4a !important;
+      color: #23502F !important;
       font-size: 8px;
     }
-    .leaflet-control-attribution a { color: #2a3a4a !important; }
+    .leaflet-control-attribution a { color: #23502F !important; }
 
     #legend {
       position: fixed;
       ${alvoFoco != null ? 'top: 12px;' : 'bottom: 48px;'}
       left: 12px;
       background: rgba(7,9,15,0.82);
-      border: 1px solid rgba(0,229,255,0.15);
-      border-left: 2px solid #00e5ff;
+      border: 1px solid rgba(0, 255, 102,0.15);
+      border-left: 2px solid #00FF66;
       border-radius: 3px;
       padding: 10px 12px;
       font-family: monospace;
@@ -87,9 +87,9 @@ export function buildMapHtml(lat, lng, salvos, alvoFoco = null) {
     }
     #modeBtn {
       background: rgba(7,9,15,0.85);
-      border: 1px solid rgba(0,229,255,0.35);
+      border: 1px solid rgba(0, 255, 102,0.35);
       border-radius: 3px;
-      color: #00e5ff;
+      color: #00FF66;
       font-family: monospace;
       font-size: 9px;
       letter-spacing: 1.5px;
@@ -99,13 +99,13 @@ export function buildMapHtml(lat, lng, salvos, alvoFoco = null) {
       box-shadow: 0 2px 8px rgba(0,0,0,0.5);
       white-space: nowrap;
     }
-    #modeBtn:active { background: rgba(0,229,255,0.15); }
+    #modeBtn:active { background: rgba(0, 255, 102,0.15); }
     #poiInfo {
       background: rgba(7,9,15,0.82);
-      border: 1px solid rgba(0,229,255,0.15);
-      border-right: 2px solid #00e5ff;
+      border: 1px solid rgba(0, 255, 102,0.15);
+      border-right: 2px solid #00FF66;
       border-radius: 3px;
-      color: rgba(0,229,255,0.45);
+      color: rgba(0, 255, 102,0.45);
       font-family: monospace;
       font-size: 8px;
       letter-spacing: 1px;
@@ -118,9 +118,9 @@ export function buildMapHtml(lat, lng, salvos, alvoFoco = null) {
     .lg-title {
       font-size: 8px;
       letter-spacing: 2px;
-      color: rgba(0,229,255,0.35);
+      color: rgba(0, 255, 102,0.35);
       margin-bottom: 8px;
-      border-bottom: 1px solid rgba(0,229,255,0.08);
+      border-bottom: 1px solid rgba(0, 255, 102,0.08);
       padding-bottom: 6px;
     }
     .lg-row {
@@ -135,19 +135,19 @@ export function buildMapHtml(lat, lng, salvos, alvoFoco = null) {
       border-radius: 50%;
       flex-shrink: 0;
     }
-    .lg-dot-op  { background: #00e5ff; box-shadow: 0 0 5px #00e5ff; }
+    .lg-dot-op  { background: #00FF66; box-shadow: 0 0 5px #00FF66; }
     .lg-dot-tgt { background: #ff2d55; box-shadow: 0 0 5px #ff2d55; }
     .lg-dot-sel { background: #ffd60a; box-shadow: 0 0 5px #ffd60a; }
     .lg-text {
       font-size: 9px;
       letter-spacing: 1.5px;
-      color: #4a6a7a;
+      color: #356B49;
     }
-    .lg-text-op  { color: #00b4cc; }
+    .lg-text-op  { color: #00C24E; }
     .lg-text-sel { color: #c9a800; }
     .lg-divider {
       height: 1px;
-      background: rgba(0,229,255,0.07);
+      background: rgba(0, 255, 102,0.07);
       margin: 6px 0;
     }
   </style>
@@ -229,18 +229,18 @@ export function buildMapHtml(lat, lng, salvos, alvoFoco = null) {
 
     var crosshairOp = '<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">'
       + '<circle cx="18" cy="18" r="15" stroke="rgba(0,0,0,0.5)" stroke-width="3" fill="none"/>'
-      + '<circle cx="18" cy="18" r="15" stroke="#00e5ff" stroke-width="1" fill="none" opacity="0.9"/>'
+      + '<circle cx="18" cy="18" r="15" stroke="#00FF66" stroke-width="1" fill="none" opacity="0.9"/>'
       + '<circle cx="18" cy="18" r="7" stroke="rgba(0,0,0,0.5)" stroke-width="3" fill="none"/>'
-      + '<circle cx="18" cy="18" r="7" stroke="#00e5ff" stroke-width="1" fill="none"/>'
-      + '<circle cx="18" cy="18" r="2.5" stroke="rgba(0,0,0,0.6)" stroke-width="1.5" fill="#00e5ff"/>'
+      + '<circle cx="18" cy="18" r="7" stroke="#00FF66" stroke-width="1" fill="none"/>'
+      + '<circle cx="18" cy="18" r="2.5" stroke="rgba(0,0,0,0.6)" stroke-width="1.5" fill="#00FF66"/>'
       + '<line x1="18" y1="2" x2="18" y2="10" stroke="rgba(0,0,0,0.5)" stroke-width="3.5"/>'
-      + '<line x1="18" y1="2" x2="18" y2="10" stroke="#00e5ff" stroke-width="1.5"/>'
+      + '<line x1="18" y1="2" x2="18" y2="10" stroke="#00FF66" stroke-width="1.5"/>'
       + '<line x1="18" y1="26" x2="18" y2="34" stroke="rgba(0,0,0,0.5)" stroke-width="3.5"/>'
-      + '<line x1="18" y1="26" x2="18" y2="34" stroke="#00e5ff" stroke-width="1.5"/>'
+      + '<line x1="18" y1="26" x2="18" y2="34" stroke="#00FF66" stroke-width="1.5"/>'
       + '<line x1="2" y1="18" x2="10" y2="18" stroke="rgba(0,0,0,0.5)" stroke-width="3.5"/>'
-      + '<line x1="2" y1="18" x2="10" y2="18" stroke="#00e5ff" stroke-width="1.5"/>'
+      + '<line x1="2" y1="18" x2="10" y2="18" stroke="#00FF66" stroke-width="1.5"/>'
       + '<line x1="26" y1="18" x2="34" y2="18" stroke="rgba(0,0,0,0.5)" stroke-width="3.5"/>'
-      + '<line x1="26" y1="18" x2="34" y2="18" stroke="#00e5ff" stroke-width="1.5"/>'
+      + '<line x1="26" y1="18" x2="34" y2="18" stroke="#00FF66" stroke-width="1.5"/>'
       + '</svg>';
 
     var crosshairTgt = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">'
@@ -289,8 +289,8 @@ export function buildMapHtml(lat, lng, salvos, alvoFoco = null) {
     L.marker([${lat}, ${lng}], { icon: iconOp })
       .addTo(map)
       .bindPopup(
-        '<div style="color:#00e5ff;letter-spacing:2px;margin-bottom:4px;">◈ OPERADOR</div>'
-        + '<div style="color:#3a5268;">POSIÇÃO ATUAL</div>'
+        '<div style="color:#00FF66;letter-spacing:2px;margin-bottom:4px;">◈ OPERADOR</div>'
+        + '<div style="color:#356B49;">POSIÇÃO ATUAL</div>'
       );
 
     var salvos = ${marcadores};
@@ -300,8 +300,8 @@ export function buildMapHtml(lat, lng, salvos, alvoFoco = null) {
         .addTo(map)
         .bindPopup(
           '<div style="color:#ff2d55;letter-spacing:2px;margin-bottom:4px;">⊕ ALVO CONFIRMADO</div>'
-          + '<div style="color:#c5dce8;margin-bottom:2px;">' + item.label + '</div>'
-          + '<div style="color:#3a5268;font-size:10px;">' + item.endereco + '</div>'
+          + '<div style="color:#C2E8CE;margin-bottom:2px;">' + item.label + '</div>'
+          + '<div style="color:#356B49;font-size:10px;">' + item.endereco + '</div>'
         );
     });
 
@@ -327,8 +327,8 @@ export function buildMapHtml(lat, lng, salvos, alvoFoco = null) {
         .addTo(map)
         .bindPopup(
           '<div style="color:#ff2d55;letter-spacing:2px;margin-bottom:4px;">⊕ ALVO CONFIRMADO</div>'
-          + '<div style="color:#c5dce8;margin-bottom:2px;">' + label + '</div>'
-          + '<div style="color:#3a5268;font-size:10px;">' + endereco + '</div>'
+          + '<div style="color:#C2E8CE;margin-bottom:2px;">' + label + '</div>'
+          + '<div style="color:#356B49;font-size:10px;">' + endereco + '</div>'
         );
     }
 

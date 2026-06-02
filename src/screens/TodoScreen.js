@@ -42,7 +42,7 @@ export default function TodoScreen({ onBack }) {
         <View style={styles.header}>
           {onBack && (
             <TouchableOpacity onPress={onBack} style={{ marginBottom: 8 }}>
-              <Text style={{ color: '#a2a8d3', fontSize: 16 }}>← Voltar</Text>
+              <Text style={{ color: '#7FB89A', fontSize: 16 }}>← Voltar</Text>
             </TouchableOpacity>
           )}
           <Text style={styles.title}>Minhas Tarefas</Text>
@@ -55,7 +55,7 @@ export default function TodoScreen({ onBack }) {
           <TextInput
             style={styles.input}
             placeholder="Nova tarefa..."
-            placeholderTextColor="#6b7aa1"
+            placeholderTextColor="#5C8C6E"
             value={texto}
             onChangeText={setTexto}
             onSubmitEditing={adicionar}

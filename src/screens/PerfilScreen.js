@@ -15,7 +15,7 @@ export default function PerfilScreen({ onBack }) {
         <TextInput
           style={globalStyles.input}
           placeholder="Seu nome"
-          placeholderTextColor="#6b7aa1"
+          placeholderTextColor="#5C8C6E"
           value={nome}
           onChangeText={setNome}
         />

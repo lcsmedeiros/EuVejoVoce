@@ -161,7 +161,7 @@ export default function MapaScreen({ onBack, coordsAtuais, alvoFoco = null }) {
               </Text>
 
               {buscandoEnd ? (
-                <ActivityIndicator color="#2a4060" size="small" style={s.endLoading} />
+                <ActivityIndicator color="#2E6B45" size="small" style={s.endLoading} />
               ) : endereco ? (
                 <Text style={s.painelEndereco} numberOfLines={2}>{endereco}</Text>
               ) : null}
@@ -171,7 +171,7 @@ export default function MapaScreen({ onBack, coordsAtuais, alvoFoco = null }) {
               <TextInput
                 style={s.painelInput}
                 placeholder="CODINOME DO ALVO..."
-                placeholderTextColor="#2a4060"
+                placeholderTextColor="#2E6B45"
                 value={label}
                 onChangeText={setLabel}
                 autoFocus
@@ -183,7 +183,7 @@ export default function MapaScreen({ onBack, coordsAtuais, alvoFoco = null }) {
                 disabled={salvando}
               >
                 {salvando
-                  ? <ActivityIndicator color="#07090f" size="small" />
+                  ? <ActivityIndicator color="#0B0F0C" size="small" />
                   : <Text style={s.painelBotaoTexto}>CONFIRMAR ALVO</Text>
                 }
               </TouchableOpacity>
@@ -248,18 +248,18 @@ export default function MapaScreen({ onBack, coordsAtuais, alvoFoco = null }) {
 }
 
 const s = StyleSheet.create({
-  container:   { flex: 1, backgroundColor: '#07090f' },
+  container:   { flex: 1, backgroundColor: '#0B0F0C' },
   header:      { paddingTop: 48, paddingHorizontal: 24, paddingBottom: 12 },
-  voltar:      { color: '#2a4060', fontSize: 12, marginBottom: 8, fontFamily: 'monospace', letterSpacing: 2 },
-  titulo:      { fontSize: 16, fontWeight: '900', color: '#00e5ff', letterSpacing: 2, marginBottom: 10 },
-  headerLine:  { height: 1, backgroundColor: 'rgba(0, 229, 255, 0.2)' },
+  voltar:      { color: '#2E6B45', fontSize: 12, marginBottom: 8, fontFamily: 'monospace', letterSpacing: 2 },
+  titulo:      { fontSize: 16, fontWeight: '900', color: '#00FF66', letterSpacing: 2, marginBottom: 10 },
+  headerLine:  { height: 1, backgroundColor: 'rgba(0, 255, 102, 0.2)' },
   mapa:        { flex: 1 },
-  aviso:       { color: '#2a4060', textAlign: 'center', marginTop: 48, padding: 24, fontFamily: 'monospace', letterSpacing: 1 },
+  aviso:       { color: '#2E6B45', textAlign: 'center', marginTop: 48, padding: 24, fontFamily: 'monospace', letterSpacing: 1 },
 
   painelWrapper: { position: 'absolute', bottom: 0, left: 0, right: 0 },
 
   painel: {
-    backgroundColor: '#07090f',
+    backgroundColor: '#0B0F0C',
     borderTopWidth: 1,
     borderTopColor: '#ffd60a',
     borderLeftWidth: 3,
@@ -269,28 +269,28 @@ const s = StyleSheet.create({
   },
   painelHeader:    { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
   painelTitulo:    { color: '#ffd60a', fontSize: 12, fontWeight: '900', letterSpacing: 2, fontFamily: 'monospace' },
-  painelFechar:    { color: '#2a4060', fontSize: 18, paddingLeft: 16 },
-  painelCoords:    { color: '#3a5268', fontSize: 11, fontFamily: 'monospace', marginBottom: 6 },
-  painelEndereco:  { color: '#2a5070', fontSize: 10, fontFamily: 'monospace', marginBottom: 10, lineHeight: 16 },
+  painelFechar:    { color: '#2E6B45', fontSize: 18, paddingLeft: 16 },
+  painelCoords:    { color: '#356B49', fontSize: 11, fontFamily: 'monospace', marginBottom: 6 },
+  painelEndereco:  { color: '#2E6B45', fontSize: 10, fontFamily: 'monospace', marginBottom: 10, lineHeight: 16 },
   endLoading:      { alignSelf: 'flex-start', marginBottom: 10 },
   painelSeparador: { height: 1, backgroundColor: 'rgba(255,214,10,0.15)', marginBottom: 12 },
   painelInput: {
-    backgroundColor: '#0a0f1a',
+    backgroundColor: '#0E1411',
     borderWidth: 1,
     borderColor: 'rgba(255,214,10,0.3)',
     borderRadius: 4,
     padding: 12,
     fontSize: 13,
-    color: '#c5dce8',
+    color: '#C2E8CE',
     fontFamily: 'monospace',
     letterSpacing: 1,
     marginBottom: 12,
   },
   painelBotao:      { backgroundColor: '#ffd60a', padding: 14, borderRadius: 4, alignItems: 'center' },
-  painelBotaoTexto: { color: '#07090f', fontSize: 12, fontWeight: '900', letterSpacing: 2 },
+  painelBotaoTexto: { color: '#0B0F0C', fontSize: 12, fontWeight: '900', letterSpacing: 2 },
 
   painelArma: {
-    backgroundColor: '#07090f',
+    backgroundColor: '#0B0F0C',
     borderTopWidth: 1,
     borderTopColor: 'rgba(255,45,85,0.4)',
     borderLeftWidth: 3,
@@ -313,7 +313,7 @@ const s = StyleSheet.create({
   armaIndicador: { width: 4, height: 36, borderRadius: 2, marginRight: 12 },
   armaInfo:      { flex: 1 },
   armaNome:      { fontSize: 12, fontWeight: '900', letterSpacing: 1, fontFamily: 'monospace', marginBottom: 2 },
-  armaRaio:      { color: '#2a4060', fontSize: 10, fontFamily: 'monospace', letterSpacing: 1 },
+  armaRaio:      { color: '#2E6B45', fontSize: 10, fontFamily: 'monospace', letterSpacing: 1 },
   armaIcone:     { fontSize: 18, fontWeight: '900' },
 
   armaAtivaHeader: {
@@ -322,7 +322,7 @@ const s = StyleSheet.create({
     alignItems: 'center',
   },
   armaAtivaNome: { fontSize: 14, fontWeight: '900', letterSpacing: 1, fontFamily: 'monospace', marginBottom: 4 },
-  armaAtivaRaio: { color: '#3a5268', fontSize: 10, fontFamily: 'monospace', letterSpacing: 1 },
+  armaAtivaRaio: { color: '#356B49', fontSize: 10, fontFamily: 'monospace', letterSpacing: 1 },
   mudarArmaBtn: {
     borderWidth: 1,
     borderRadius: 4,

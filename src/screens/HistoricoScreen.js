@@ -51,7 +51,7 @@ export default function HistoricoScreen({ onBack, onVerNoMapa }) {
       <FlatList
         data={registros}
         keyExtractor={(item) => String(item.id)}
-        refreshControl={<RefreshControl refreshing={carregando} onRefresh={carregar} tintColor="#00e5ff" />}
+        refreshControl={<RefreshControl refreshing={carregando} onRefresh={carregar} tintColor="#00FF66" />}
         contentContainerStyle={{ paddingBottom: 32 }}
         ListEmptyComponent={
           <Text style={s.vazio}>[ NENHUM ALVO MARCADO ]</Text>
@@ -102,43 +102,43 @@ export default function HistoricoScreen({ onBack, onVerNoMapa }) {
 }
 
 const s = StyleSheet.create({
-  container:  { flex: 1, backgroundColor: '#07090f', paddingHorizontal: 20 },
+  container:  { flex: 1, backgroundColor: '#0B0F0C', paddingHorizontal: 20 },
   header:     { paddingTop: 48, marginBottom: 20 },
-  voltar:     { color: '#2a4060', fontSize: 12, marginBottom: 12, fontFamily: 'monospace', letterSpacing: 2 },
-  titulo:     { fontSize: 18, fontWeight: '900', color: '#00e5ff', letterSpacing: 3, marginBottom: 4 },
-  contagem:   { color: '#2a4060', fontSize: 10, letterSpacing: 2, fontFamily: 'monospace', marginBottom: 10 },
-  headerLine: { height: 1, backgroundColor: 'rgba(0, 229, 255, 0.2)' },
-  vazio:      { color: '#2a4060', textAlign: 'center', marginTop: 48, fontSize: 12, fontFamily: 'monospace', letterSpacing: 1 },
+  voltar:     { color: '#2E6B45', fontSize: 12, marginBottom: 12, fontFamily: 'monospace', letterSpacing: 2 },
+  titulo:     { fontSize: 18, fontWeight: '900', color: '#00FF66', letterSpacing: 3, marginBottom: 4 },
+  contagem:   { color: '#2E6B45', fontSize: 10, letterSpacing: 2, fontFamily: 'monospace', marginBottom: 10 },
+  headerLine: { height: 1, backgroundColor: 'rgba(0, 255, 102, 0.2)' },
+  vazio:      { color: '#2E6B45', textAlign: 'center', marginTop: 48, fontSize: 12, fontFamily: 'monospace', letterSpacing: 1 },
 
   card: {
-    backgroundColor: '#0b1019',
+    backgroundColor: '#12181A',
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: 'rgba(0, 229, 255, 0.12)',
+    borderColor: 'rgba(0, 255, 102, 0.12)',
     borderLeftWidth: 3,
-    borderLeftColor: '#00e5ff',
+    borderLeftColor: '#00FF66',
     padding: 16,
     marginBottom: 10,
   },
   cardTopo:   { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 },
-  rotulo:     { color: '#c5dce8', fontWeight: '700', fontSize: 14, flex: 1, letterSpacing: 1 },
+  rotulo:     { color: '#C2E8CE', fontWeight: '700', fontSize: 14, flex: 1, letterSpacing: 1 },
   deletar:    { color: '#ff2d55', fontSize: 16, paddingLeft: 12 },
-  endereco:   { color: '#3a5268', fontSize: 12, marginBottom: 8 },
-  separador:  { height: 1, backgroundColor: 'rgba(0, 229, 255, 0.06)', marginVertical: 8 },
-  coords:     { color: '#00e5ff', fontFamily: 'monospace', fontSize: 12, marginBottom: 6 },
+  endereco:   { color: '#356B49', fontSize: 12, marginBottom: 8 },
+  separador:  { height: 1, backgroundColor: 'rgba(0, 255, 102, 0.06)', marginVertical: 8 },
+  coords:     { color: '#00FF66', fontFamily: 'monospace', fontSize: 12, marginBottom: 6 },
   metaRow:    { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 },
-  meta:       { color: '#2a4060', fontSize: 11, fontFamily: 'monospace', letterSpacing: 1 },
-  data:       { color: '#2a4060', fontSize: 11, fontFamily: 'monospace' },
+  meta:       { color: '#2E6B45', fontSize: 11, fontFamily: 'monospace', letterSpacing: 1 },
+  data:       { color: '#2E6B45', fontSize: 11, fontFamily: 'monospace' },
 
   acoes:      { flexDirection: 'row' },
   botaoAcao: {
     borderWidth: 1,
-    borderColor: 'rgba(0, 229, 255, 0.3)',
+    borderColor: 'rgba(0, 255, 102, 0.3)',
     borderRadius: 4,
     padding: 10,
     alignItems: 'center',
   },
   botaoAcaoAtivo:  { borderColor: 'rgba(255, 45, 85, 0.4)' },
-  botaoAcaoTexto:  { color: '#00e5ff', fontSize: 11, fontWeight: '700', letterSpacing: 1 },
+  botaoAcaoTexto:  { color: '#00FF66', fontSize: 11, fontWeight: '700', letterSpacing: 1 },
 
 });

@@ -82,13 +82,13 @@ export default function GpsScreen({ onBack, onNavigateHistorico }) {
 
       {status === 'requesting' && (
         <View style={styles.statusRow}>
-          <ActivityIndicator color="#00e5ff" size="small" />
+          <ActivityIndicator color="#00FF66" size="small" />
           <Text style={styles.statusText}>  SOLICITANDO PERMISSÃO...</Text>
         </View>
       )}
       {status === 'watching' && !coords && (
         <View style={styles.statusRow}>
-          <ActivityIndicator color="#00e5ff" size="small" />
+          <ActivityIndicator color="#00FF66" size="small" />
           <Text style={styles.statusText}>  AGUARDANDO SINAL GPS...</Text>
         </View>
       )}
@@ -121,7 +121,7 @@ export default function GpsScreen({ onBack, onNavigateHistorico }) {
         <TextInput
           style={styles.input}
           placeholder="RÓTULO: EX. MESA, PORTA, JANELA..."
-          placeholderTextColor="#2a4060"
+          placeholderTextColor="#2E6B45"
           value={label}
           onChangeText={setLabel}
         />
@@ -131,7 +131,7 @@ export default function GpsScreen({ onBack, onNavigateHistorico }) {
           disabled={!coords || salvando}
         >
           {salvando
-            ? <ActivityIndicator color="#07090f" />
+            ? <ActivityIndicator color="#0B0F0C" />
             : <Text style={globalStyles.buttonText}>SALVAR LOCALIZAÇÃO</Text>
           }
         </TouchableOpacity>
@@ -164,39 +164,39 @@ function CoordRow({ label, value, highlight }) {
 }
 
 const styles = StyleSheet.create({
-  container:   { flex: 1, backgroundColor: '#07090f', paddingHorizontal: 20 },
+  container:   { flex: 1, backgroundColor: '#0B0F0C', paddingHorizontal: 20 },
   header:      { paddingTop: 48, marginBottom: 24 },
-  backBtn:     { color: '#2a4060', fontSize: 12, marginBottom: 12, fontFamily: 'monospace', letterSpacing: 2 },
-  title:       { fontSize: 18, fontWeight: '900', color: '#00e5ff', letterSpacing: 3, marginBottom: 10 },
-  headerLine:  { height: 1, backgroundColor: 'rgba(0, 229, 255, 0.2)' },
+  backBtn:     { color: '#2E6B45', fontSize: 12, marginBottom: 12, fontFamily: 'monospace', letterSpacing: 2 },
+  title:       { fontSize: 18, fontWeight: '900', color: '#00FF66', letterSpacing: 3, marginBottom: 10 },
+  headerLine:  { height: 1, backgroundColor: 'rgba(0, 255, 102, 0.2)' },
   statusRow:   { flexDirection: 'row', alignItems: 'center', marginBottom: 16 },
-  statusText:  { color: '#00e5ff', fontSize: 12, fontFamily: 'monospace', letterSpacing: 1 },
+  statusText:  { color: '#00FF66', fontSize: 12, fontFamily: 'monospace', letterSpacing: 1 },
   errorText:   { color: '#ff2d55', fontSize: 12, fontFamily: 'monospace', letterSpacing: 1, marginBottom: 16 },
   coordCard: {
-    backgroundColor: '#0b1019',
+    backgroundColor: '#12181A',
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: 'rgba(0, 229, 255, 0.15)',
+    borderColor: 'rgba(0, 255, 102, 0.15)',
     borderLeftWidth: 3,
-    borderLeftColor: '#00e5ff',
+    borderLeftColor: '#00FF66',
     padding: 20,
     marginBottom: 24,
   },
-  cardHeader:  { fontSize: 10, color: '#00e5ff', letterSpacing: 3, marginBottom: 12, fontFamily: 'monospace', opacity: 0.7 },
+  cardHeader:  { fontSize: 10, color: '#00FF66', letterSpacing: 3, marginBottom: 12, fontFamily: 'monospace', opacity: 0.7 },
   coordRow:    { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
-  coordLabel:  { color: '#2a4060', fontSize: 11, letterSpacing: 2, fontFamily: 'monospace' },
-  coordValue:  { color: '#00e5ff', fontSize: 13, fontWeight: '700', fontFamily: 'monospace' },
-  separador:   { height: 1, backgroundColor: 'rgba(0, 229, 255, 0.08)', marginVertical: 8 },
+  coordLabel:  { color: '#2E6B45', fontSize: 11, letterSpacing: 2, fontFamily: 'monospace' },
+  coordValue:  { color: '#00FF66', fontSize: 13, fontWeight: '700', fontFamily: 'monospace' },
+  separador:   { height: 1, backgroundColor: 'rgba(0, 255, 102, 0.08)', marginVertical: 8 },
   signalLabel: { textAlign: 'center', fontWeight: '700', marginTop: 10, fontSize: 11, fontFamily: 'monospace', letterSpacing: 1 },
   saveBox:     { gap: 10 },
   input: {
-    backgroundColor: '#0a0f1a',
+    backgroundColor: '#0E1411',
     borderWidth: 1,
-    borderColor: 'rgba(0, 229, 255, 0.25)',
+    borderColor: 'rgba(0, 255, 102, 0.25)',
     borderRadius: 4,
     padding: 14,
     fontSize: 13,
-    color: '#c5dce8',
+    color: '#C2E8CE',
     fontFamily: 'monospace',
     letterSpacing: 1,
   },

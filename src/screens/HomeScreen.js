@@ -110,7 +110,7 @@ export default function HomeScreen({ onVerMapa, onVerHistorico }) {
 
       {aguardando && (
         <View style={s.row}>
-          <ActivityIndicator color="#00e5ff" size="small" />
+          <ActivityIndicator color="#00FF66" size="small" />
           <Text style={s.info}>  ADQUIRINDO SINAL GPS...</Text>
         </View>
       )}
@@ -200,7 +200,7 @@ export default function HomeScreen({ onVerMapa, onVerHistorico }) {
       <TextInput
         style={s.input}
         placeholder="CODINOME DO ALVO..."
-        placeholderTextColor="#2a4060"
+        placeholderTextColor="#2E6B45"
         value={label}
         onChangeText={setLabel}
       />
@@ -211,7 +211,7 @@ export default function HomeScreen({ onVerMapa, onVerHistorico }) {
         disabled={!coords || salvando || estabilizando}
       >
         {salvando
-          ? <ActivityIndicator color="#07090f" />
+          ? <ActivityIndicator color="#0B0F0C" />
           : <Text style={s.botaoTexto}>
               {estabilizando ? 'ADQUIRINDO ALVO...' : 'MARCAR ALVO'}
             </Text>
@@ -234,79 +234,79 @@ export default function HomeScreen({ onVerMapa, onVerHistorico }) {
 }
 
 const s = StyleSheet.create({
-  container:    { flex: 1, backgroundColor: '#07090f', padding: 24 },
+  container:    { flex: 1, backgroundColor: '#0B0F0C', padding: 24 },
 
   headerBox:    { marginTop: 48, marginBottom: 24 },
-  titulo:       { fontSize: 22, fontWeight: '900', color: '#00e5ff', letterSpacing: 4 },
-  subtitulo:    { fontSize: 10, color: '#2a4060', letterSpacing: 3, marginTop: 4, marginBottom: 10 },
-  headerLine:   { height: 1, backgroundColor: 'rgba(0, 229, 255, 0.2)' },
+  titulo:       { fontSize: 22, fontWeight: '900', color: '#00FF66', letterSpacing: 4 },
+  subtitulo:    { fontSize: 10, color: '#2E6B45', letterSpacing: 3, marginTop: 4, marginBottom: 10 },
+  headerLine:   { height: 1, backgroundColor: 'rgba(0, 255, 102, 0.2)' },
 
   row:          { flexDirection: 'row', alignItems: 'center', marginBottom: 16 },
-  info:         { color: '#00e5ff', fontSize: 12, fontFamily: 'monospace', letterSpacing: 1 },
+  info:         { color: '#00FF66', fontSize: 12, fontFamily: 'monospace', letterSpacing: 1 },
 
   card: {
-    backgroundColor: '#0b1019',
+    backgroundColor: '#12181A',
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: 'rgba(0, 229, 255, 0.15)',
+    borderColor: 'rgba(0, 255, 102, 0.15)',
     borderLeftWidth: 3,
-    borderLeftColor: '#00e5ff',
+    borderLeftColor: '#00FF66',
     padding: 20,
     marginBottom: 20,
   },
   cardHeaderRow:      { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
-  cardHeader:         { fontSize: 10, color: '#00e5ff', letterSpacing: 3, fontFamily: 'monospace', opacity: 0.7 },
+  cardHeader:         { fontSize: 10, color: '#00FF66', letterSpacing: 3, fontFamily: 'monospace', opacity: 0.7 },
   statusBadge:        { flexDirection: 'row', alignItems: 'center', gap: 5 },
   statusDot:          { width: 6, height: 6, borderRadius: 3 },
   statusTexto:        { fontSize: 9, fontFamily: 'monospace', letterSpacing: 1, fontWeight: '900' },
 
   enderecoRow:        { flexDirection: 'row', alignItems: 'flex-start', gap: 6, marginBottom: 12 },
-  enderecoIcon:       { color: '#00e5ff', fontSize: 12, marginTop: 1, opacity: 0.6 },
-  endereco:           { color: '#c5dce8', fontSize: 13, fontWeight: '600', flex: 1 },
-  enderecoCarregando: { color: '#2a4060', fontSize: 11, fontFamily: 'monospace', letterSpacing: 1, flex: 1 },
+  enderecoIcon:       { color: '#00FF66', fontSize: 12, marginTop: 1, opacity: 0.6 },
+  endereco:           { color: '#C2E8CE', fontSize: 13, fontWeight: '600', flex: 1 },
+  enderecoCarregando: { color: '#2E6B45', fontSize: 11, fontFamily: 'monospace', letterSpacing: 1, flex: 1 },
 
   secRow:       { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 8 },
-  secLabel:     { color: '#2a4060', fontSize: 9, letterSpacing: 2, fontFamily: 'monospace' },
-  secLine:      { flex: 1, height: 1, backgroundColor: 'rgba(0, 229, 255, 0.08)' },
+  secLabel:     { color: '#2E6B45', fontSize: 9, letterSpacing: 2, fontFamily: 'monospace' },
+  secLine:      { flex: 1, height: 1, backgroundColor: 'rgba(0, 255, 102, 0.08)' },
 
-  separador:    { height: 1, backgroundColor: 'rgba(0, 229, 255, 0.08)', marginVertical: 12 },
+  separador:    { height: 1, backgroundColor: 'rgba(0, 255, 102, 0.08)', marginVertical: 12 },
   coordRow:     { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
-  dataLabel:    { color: '#2a4060', fontSize: 11, letterSpacing: 2, fontFamily: 'monospace' },
-  valor:        { color: '#00e5ff', fontSize: 13, fontWeight: '700', fontFamily: 'monospace' },
+  dataLabel:    { color: '#2E6B45', fontSize: 11, letterSpacing: 2, fontFamily: 'monospace' },
+  valor:        { color: '#00FF66', fontSize: 13, fontWeight: '700', fontFamily: 'monospace' },
 
   telRow:       { flexDirection: 'row', gap: 16 },
   telItem:      { flex: 1 },
 
   sinalRow:          { alignItems: 'center', marginTop: 4 },
   progressRow:       { flexDirection: 'row', gap: 6, marginBottom: 8 },
-  progressBlock:     { width: 28, height: 5, backgroundColor: 'rgba(0, 229, 255, 0.1)', borderRadius: 2 },
-  progressBlockFilled: { backgroundColor: '#00e5ff' },
-  calibrando:        { color: '#2a4060', fontSize: 10, letterSpacing: 2, fontFamily: 'monospace' },
+  progressBlock:     { width: 28, height: 5, backgroundColor: 'rgba(0, 255, 102, 0.1)', borderRadius: 2 },
+  progressBlockFilled: { backgroundColor: '#00FF66' },
+  calibrando:        { color: '#2E6B45', fontSize: 10, letterSpacing: 2, fontFamily: 'monospace' },
   sinalTexto:        { fontSize: 11, letterSpacing: 1, fontFamily: 'monospace', fontWeight: '700' },
 
   input: {
-    backgroundColor: '#0a0f1a',
+    backgroundColor: '#0E1411',
     borderWidth: 1,
-    borderColor: 'rgba(0, 229, 255, 0.25)',
+    borderColor: 'rgba(0, 255, 102, 0.25)',
     borderRadius: 4,
     padding: 14,
     fontSize: 13,
-    color: '#c5dce8',
+    color: '#C2E8CE',
     marginBottom: 12,
     fontFamily: 'monospace',
     letterSpacing: 1,
   },
 
-  botao:        { backgroundColor: '#00e5ff', padding: 15, borderRadius: 4, alignItems: 'center', marginBottom: 10 },
-  botaoTexto:   { color: '#07090f', fontSize: 12, fontWeight: '900', letterSpacing: 2 },
+  botao:        { backgroundColor: '#00FF66', padding: 15, borderRadius: 4, alignItems: 'center', marginBottom: 10 },
+  botaoTexto:   { color: '#0B0F0C', fontSize: 12, fontWeight: '900', letterSpacing: 2 },
   botaoSec: {
     backgroundColor: 'transparent',
     borderWidth: 1,
-    borderColor: 'rgba(0, 229, 255, 0.3)',
+    borderColor: 'rgba(0, 255, 102, 0.3)',
     borderRadius: 4,
     padding: 15,
     alignItems: 'center',
     marginBottom: 10,
   },
-  botaoSecTexto: { color: '#00e5ff', fontSize: 12, fontWeight: '700', letterSpacing: 2 },
+  botaoSecTexto: { color: '#00FF66', fontSize: 12, fontWeight: '700', letterSpacing: 2 },
 });

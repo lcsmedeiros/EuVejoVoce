@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#07090f',
+    backgroundColor: '#0B0F0C',
     paddingTop: 48,
     paddingHorizontal: 24,
   },
@@ -13,13 +13,13 @@ export const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: '900',
-    color: '#00e5ff',
+    color: '#00FF66',
     letterSpacing: 4,
     marginBottom: 4,
   },
   subtitle: {
     fontSize: 10,
-    color: '#2a4060',
+    color: '#2E6B45',
     letterSpacing: 2,
   },
   inputRow: {
@@ -30,13 +30,13 @@ export const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    backgroundColor: '#0a0f1a',
+    backgroundColor: '#0E1411',
     borderWidth: 1,
-    borderColor: 'rgba(0, 229, 255, 0.25)',
+    borderColor: 'rgba(0, 255, 102, 0.25)',
     borderRadius: 4,
     padding: 14,
     fontSize: 13,
-    color: '#c5dce8',
+    color: '#C2E8CE',
     fontFamily: 'monospace',
     letterSpacing: 1,
   },
@@ -44,12 +44,12 @@ export const styles = StyleSheet.create({
     width: 52,
     height: 52,
     borderRadius: 4,
-    backgroundColor: '#00e5ff',
+    backgroundColor: '#00FF66',
     alignItems: 'center',
     justifyContent: 'center',
   },
   btnAddText: {
-    color: '#07090f',
+    color: '#0B0F0C',
     fontSize: 28,
     fontWeight: '900',
     lineHeight: 32,
@@ -58,7 +58,7 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   emptyText: {
-    color: '#2a4060',
+    color: '#2E6B45',
     fontSize: 12,
     textAlign: 'center',
     marginTop: 32,
@@ -66,12 +66,12 @@ export const styles = StyleSheet.create({
     letterSpacing: 1,
   },
   card: {
-    backgroundColor: '#0b1019',
+    backgroundColor: '#12181A',
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: 'rgba(0, 229, 255, 0.12)',
+    borderColor: 'rgba(0, 255, 102, 0.12)',
     borderLeftWidth: 3,
-    borderLeftColor: '#00e5ff',
+    borderLeftColor: '#00FF66',
     padding: 16,
     marginBottom: 10,
   },
@@ -86,28 +86,28 @@ export const styles = StyleSheet.create({
     height: 22,
     borderRadius: 3,
     borderWidth: 1,
-    borderColor: 'rgba(0, 229, 255, 0.4)',
+    borderColor: 'rgba(0, 255, 102, 0.4)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   checkboxFeita: {
-    backgroundColor: '#00e5ff',
-    borderColor: '#00e5ff',
+    backgroundColor: '#00FF66',
+    borderColor: '#00FF66',
   },
   checkMark: {
-    color: '#07090f',
+    color: '#0B0F0C',
     fontSize: 13,
     fontWeight: 'bold',
   },
   taskText: {
     fontSize: 14,
-    color: '#c5dce8',
+    color: '#C2E8CE',
     flex: 1,
     letterSpacing: 0.5,
   },
   taskTextFeita: {
     textDecorationLine: 'line-through',
-    color: '#2a4060',
+    color: '#2E6B45',
   },
   btnRemover: {
     paddingVertical: 8,
@@ -120,7 +120,7 @@ export const styles = StyleSheet.create({
     letterSpacing: 1,
   },
   button: {
-    backgroundColor: '#00e5ff',
+    backgroundColor: '#00FF66',
     padding: 15,
     borderRadius: 4,
     alignItems: 'center',
@@ -129,16 +129,16 @@ export const styles = StyleSheet.create({
   buttonSecondary: {
     backgroundColor: 'transparent',
     borderWidth: 1,
-    borderColor: 'rgba(0, 229, 255, 0.3)',
+    borderColor: 'rgba(0, 255, 102, 0.3)',
   },
   buttonText: {
-    color: '#07090f',
+    color: '#0B0F0C',
     fontSize: 12,
     fontWeight: '900',
     letterSpacing: 2,
   },
   buttonTextSecondary: {
-    color: '#00e5ff',
+    color: '#00FF66',
   },
 });
 
