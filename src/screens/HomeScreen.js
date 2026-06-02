@@ -253,6 +253,11 @@ const s = StyleSheet.create({
     borderLeftColor: '#00FF66',
     padding: 20,
     marginBottom: 20,
+    shadowColor: '#00FF66',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 3,
   },
   cardHeaderRow:      { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
   cardHeader:         { fontSize: 10, color: '#00FF66', letterSpacing: 3, fontFamily: 'monospace', opacity: 0.7 },
@@ -297,7 +302,7 @@ const s = StyleSheet.create({
     letterSpacing: 1,
   },
 
-  botao:        { backgroundColor: '#00FF66', padding: 15, borderRadius: 4, alignItems: 'center', marginBottom: 10 },
+  botao:        { backgroundColor: '#00FF66', padding: 15, borderRadius: 4, alignItems: 'center', marginBottom: 10, shadowColor: '#00FF66', shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.6, shadowRadius: 10, elevation: 8 },
   botaoTexto:   { color: '#0B0F0C', fontSize: 12, fontWeight: '900', letterSpacing: 2 },
   botaoSec: {
     backgroundColor: 'transparent',
