@@ -249,8 +249,6 @@ const s = StyleSheet.create({
     borderRadius: 4,
     borderWidth: 1,
     borderColor: 'rgba(0, 255, 102, 0.15)',
-    borderLeftWidth: 3,
-    borderLeftColor: '#00FF66',
     padding: 20,
     marginBottom: 20,
     shadowColor: '#00FF66',
