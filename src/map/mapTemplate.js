@@ -608,9 +608,149 @@ export function buildMapHtml(lat, lng, salvos, alvoFoco = null) {
       });
     }
 
+    // ── Sistema de áudio sintético ────────────────────────────────────────
+    function getAudioCtx() {
+      if (!window._actx) {
+        try { window._actx = new (window.AudioContext || window.webkitAudioContext)(); }
+        catch(e) { return null; }
+      }
+      return window._actx;
+    }
+
+    function mkNoise(ctx, durSec) {
+      var n = Math.ceil(ctx.sampleRate * durSec);
+      var buf = ctx.createBuffer(1, n, ctx.sampleRate);
+      var d = buf.getChannelData(0);
+      for (var i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+      var src = ctx.createBufferSource();
+      src.buffer = buf;
+      return src;
+    }
+
+    function soundGranada() {
+      var ctx = getAudioCtx(); if (!ctx) return;
+      var t = ctx.currentTime;
+      // crack seco
+      var cn = mkNoise(ctx, 0.3);
+      var cf = ctx.createBiquadFilter(); cf.type = 'bandpass'; cf.frequency.value = 1400; cf.Q.value = 0.7;
+      var cg = ctx.createGain(); cg.gain.setValueAtTime(2.0, t); cg.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+      cn.connect(cf); cf.connect(cg); cg.connect(ctx.destination); cn.start(t); cn.stop(t + 0.3);
+      // ring metálico descendente
+      var osc = ctx.createOscillator();
+      osc.frequency.setValueAtTime(880, t + 0.05); osc.frequency.exponentialRampToValueAtTime(160, t + 1.8);
+      var rg = ctx.createGain(); rg.gain.setValueAtTime(0.25, t + 0.05); rg.gain.exponentialRampToValueAtTime(0.001, t + 1.8);
+      osc.connect(rg); rg.connect(ctx.destination); osc.start(t + 0.05); osc.stop(t + 1.8);
+    }
+
+    function soundRPG() {
+      var ctx = getAudioCtx(); if (!ctx) return;
+      var t = ctx.currentTime;
+      var hit = t + 0.9;
+      // whoosh de chegada
+      var wn = mkNoise(ctx, 1.0);
+      var wf = ctx.createBiquadFilter(); wf.type = 'bandpass'; wf.frequency.setValueAtTime(300, t); wf.frequency.exponentialRampToValueAtTime(1200, hit);
+      var wg = ctx.createGain(); wg.gain.setValueAtTime(0.001, t); wg.gain.linearRampToValueAtTime(0.5, hit - 0.1); wg.gain.linearRampToValueAtTime(0.001, hit);
+      wn.connect(wf); wf.connect(wg); wg.connect(ctx.destination); wn.start(t); wn.stop(hit + 0.05);
+      // explosão
+      var en = mkNoise(ctx, 3.0);
+      var ef = ctx.createBiquadFilter(); ef.type = 'lowpass'; ef.frequency.setValueAtTime(2500, hit); ef.frequency.exponentialRampToValueAtTime(180, hit + 2.5);
+      var eg = ctx.createGain(); eg.gain.setValueAtTime(2.5, hit); eg.gain.exponentialRampToValueAtTime(0.001, hit + 3.0);
+      en.connect(ef); ef.connect(eg); eg.connect(ctx.destination); en.start(hit); en.stop(hit + 3.0);
+      // bass thud
+      var b = ctx.createOscillator(); b.frequency.setValueAtTime(80, hit); b.frequency.exponentialRampToValueAtTime(25, hit + 0.6);
+      var bg = ctx.createGain(); bg.gain.setValueAtTime(1.2, hit); bg.gain.exponentialRampToValueAtTime(0.001, hit + 0.6);
+      b.connect(bg); bg.connect(ctx.destination); b.start(hit); b.stop(hit + 0.6);
+    }
+
+    function soundCruise() {
+      var ctx = getAudioCtx(); if (!ctx) return;
+      var t = ctx.currentTime;
+      var hit = t + 2.0;
+      // tom de jato (stack de harmônicos sawtooth)
+      [220, 440, 880].forEach(function(freq) {
+        var o = ctx.createOscillator(); o.type = 'sawtooth';
+        o.frequency.setValueAtTime(freq * 0.6, t); o.frequency.linearRampToValueAtTime(freq * 1.6, hit);
+        var og = ctx.createGain(); og.gain.setValueAtTime(0.001, t); og.gain.linearRampToValueAtTime(0.12, hit - 0.4); og.gain.linearRampToValueAtTime(0.001, hit);
+        o.connect(og); og.connect(ctx.destination); o.start(t); o.stop(hit + 0.05);
+      });
+      // explosão grande
+      var en = mkNoise(ctx, 5.0);
+      var ef = ctx.createBiquadFilter(); ef.type = 'lowpass'; ef.frequency.setValueAtTime(3500, hit); ef.frequency.exponentialRampToValueAtTime(120, hit + 4.5);
+      var eg = ctx.createGain(); eg.gain.setValueAtTime(3.5, hit); eg.gain.exponentialRampToValueAtTime(0.001, hit + 5.0);
+      en.connect(ef); ef.connect(eg); eg.connect(ctx.destination); en.start(hit); en.stop(hit + 5.0);
+      // bass profundo
+      var b = ctx.createOscillator(); b.frequency.setValueAtTime(55, hit); b.frequency.exponentialRampToValueAtTime(18, hit + 2.0);
+      var bg = ctx.createGain(); bg.gain.setValueAtTime(1.8, hit); bg.gain.exponentialRampToValueAtTime(0.001, hit + 2.0);
+      b.connect(bg); bg.connect(ctx.destination); b.start(hit); b.stop(hit + 2.0);
+    }
+
+    function soundMOAB() {
+      var ctx = getAudioCtx(); if (!ctx) return;
+      var t = ctx.currentTime;
+      var hit = t + 1.8;
+      // assobio da bomba caindo
+      var fallN = mkNoise(ctx, 1.9);
+      var fallF = ctx.createBiquadFilter(); fallF.type = 'bandpass'; fallF.frequency.setValueAtTime(900, t); fallF.frequency.exponentialRampToValueAtTime(220, hit);
+      var fallG = ctx.createGain(); fallG.gain.setValueAtTime(0.3, t); fallG.gain.linearRampToValueAtTime(0.8, hit - 0.15); fallG.gain.linearRampToValueAtTime(0.001, hit);
+      fallN.connect(fallF); fallF.connect(fallG); fallG.connect(ctx.destination); fallN.start(t); fallN.stop(hit + 0.05);
+      // burst de ruído massivo
+      var en = mkNoise(ctx, 8.0);
+      var ef = ctx.createBiquadFilter(); ef.type = 'lowpass'; ef.frequency.setValueAtTime(5000, hit); ef.frequency.exponentialRampToValueAtTime(60, hit + 7.0);
+      var eg = ctx.createGain(); eg.gain.setValueAtTime(4.5, hit); eg.gain.exponentialRampToValueAtTime(0.001, hit + 8.0);
+      en.connect(ef); ef.connect(eg); eg.connect(ctx.destination); en.start(hit); en.stop(hit + 8.0);
+      // sub bass stack
+      [28, 42, 56].forEach(function(freq) {
+        var b = ctx.createOscillator(); b.frequency.setValueAtTime(freq, hit); b.frequency.exponentialRampToValueAtTime(freq * 0.35, hit + 3.5);
+        var bg = ctx.createGain(); bg.gain.setValueAtTime(1.5, hit); bg.gain.exponentialRampToValueAtTime(0.001, hit + 3.5);
+        b.connect(bg); bg.connect(ctx.destination); b.start(hit); b.stop(hit + 3.5);
+      });
+      // onda de pressão secundária ~1.4s depois
+      setTimeout(function() {
+        var c = ctx.currentTime;
+        var pn = mkNoise(ctx, 2.5);
+        var pf = ctx.createBiquadFilter(); pf.type = 'lowpass'; pf.frequency.value = 250;
+        var pg = ctx.createGain(); pg.gain.setValueAtTime(2.5, c); pg.gain.exponentialRampToValueAtTime(0.001, c + 2.5);
+        pn.connect(pf); pf.connect(pg); pg.connect(ctx.destination); pn.start(c); pn.stop(c + 2.5);
+      }, 1400);
+    }
+
+    function soundNuclear() {
+      var ctx = getAudioCtx(); if (!ctx) return;
+      var t = ctx.currentTime;
+      var hit = t + 1.0;
+      var blast = hit + 0.3;
+      // beeps de alerta (sincronizados com os blinks visuais)
+      [0, 0.4, 0.8].forEach(function(delay, i) {
+        var beep = ctx.createOscillator(); beep.type = 'sine'; beep.frequency.value = 440 + i * 220;
+        var bg = ctx.createGain(); bg.gain.setValueAtTime(0.45, t + delay); bg.gain.exponentialRampToValueAtTime(0.001, t + delay + 0.15);
+        beep.connect(bg); bg.connect(ctx.destination); beep.start(t + delay); beep.stop(t + delay + 0.2);
+      });
+      // míssil chegando — screech ascendente
+      var mo = ctx.createOscillator(); mo.type = 'sawtooth';
+      mo.frequency.setValueAtTime(800, t); mo.frequency.linearRampToValueAtTime(2800, hit);
+      var mg = ctx.createGain(); mg.gain.setValueAtTime(0.001, t); mg.gain.linearRampToValueAtTime(0.25, hit - 0.1); mg.gain.linearRampToValueAtTime(0.001, hit);
+      mo.connect(mg); mg.connect(ctx.destination); mo.start(t); mo.stop(hit);
+      // click de EMP
+      var ek = mkNoise(ctx, 0.08);
+      var ekg = ctx.createGain(); ekg.gain.setValueAtTime(4.0, hit); ekg.gain.exponentialRampToValueAtTime(0.001, hit + 0.08);
+      ek.connect(ekg); ekg.connect(ctx.destination); ek.start(hit); ek.stop(hit + 0.08);
+      // blast de ruído branco total
+      var wn = mkNoise(ctx, 11.0);
+      var wg = ctx.createGain(); wg.gain.setValueAtTime(5.5, blast); wg.gain.exponentialRampToValueAtTime(0.001, blast + 11.0);
+      wn.connect(wg); wg.connect(ctx.destination); wn.start(blast); wn.stop(blast + 11.0);
+      // sub bass rumble sustentado
+      [18, 30, 45].forEach(function(freq) {
+        var r = ctx.createOscillator(); r.frequency.setValueAtTime(freq, blast);
+        var rg = ctx.createGain(); rg.gain.setValueAtTime(2.0, blast); rg.gain.exponentialRampToValueAtTime(0.001, blast + 9.0);
+        r.connect(rg); rg.connect(ctx.destination); r.start(blast); r.stop(blast + 9.0);
+      });
+    }
+
     function simularAtaque(armaId, lat, lng) {
-      var fn = { granada: animGranada, rpg: animRPG, cruise: animCruise, moab: animMOAB, nuclear: animNuclear };
-      if (fn[armaId]) fn[armaId](lat, lng);
+      var fn  = { granada: animGranada,  rpg: animRPG,  cruise: animCruise,  moab: animMOAB,  nuclear: animNuclear  };
+      var snd = { granada: soundGranada, rpg: soundRPG, cruise: soundCruise, moab: soundMOAB, nuclear: soundNuclear };
+      if (fn[armaId])  fn[armaId](lat, lng);
+      if (snd[armaId]) snd[armaId]();
     }
   </script>
 </body>
