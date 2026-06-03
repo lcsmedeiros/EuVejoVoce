@@ -355,11 +355,11 @@ export default function MapaScreen({ onBack, coordsAtuais, alvoFoco = null }) {
 const s = StyleSheet.create({
   container:   { flex: 1, backgroundColor: '#0B0F0C' },
   header:      { paddingTop: 48, paddingHorizontal: 24, paddingBottom: 12 },
-  voltar:      { color: '#2E6B45', fontSize: 12, marginBottom: 8, fontFamily: 'monospace', letterSpacing: 2 },
+  voltar:      { color: '#2E6B45', fontSize: 12, marginBottom: 8, fontFamily: 'ShareTechMono_400Regular', letterSpacing: 2 },
   titulo:      { fontSize: 16, fontWeight: '900', color: '#00FF66', letterSpacing: 2, marginBottom: 10 },
   headerLine:  { height: 1, backgroundColor: 'rgba(0, 255, 102, 0.2)' },
   mapa:        { flex: 1 },
-  aviso:       { color: '#2E6B45', textAlign: 'center', marginTop: 48, padding: 24, fontFamily: 'monospace', letterSpacing: 1 },
+  aviso:       { color: '#2E6B45', textAlign: 'center', marginTop: 48, padding: 24, fontFamily: 'ShareTechMono_400Regular', letterSpacing: 1 },
 
   painelWrapper: { position: 'absolute', bottom: 0, left: 0, right: 0 },
   flashOverlay:  { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 9999 },
@@ -372,10 +372,10 @@ const s = StyleSheet.create({
     paddingBottom: 28,
   },
   painelHeader:    { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
-  painelTitulo:    { color: '#ffd60a', fontSize: 12, fontWeight: '900', letterSpacing: 2, fontFamily: 'monospace' },
+  painelTitulo:    { color: '#ffd60a', fontSize: 12, fontWeight: '900', letterSpacing: 2, fontFamily: 'ShareTechMono_400Regular' },
   painelFechar:    { color: '#2E6B45', fontSize: 18, paddingLeft: 16 },
-  painelCoords:    { color: '#356B49', fontSize: 11, fontFamily: 'monospace', marginBottom: 6 },
-  painelEndereco:  { color: '#2E6B45', fontSize: 10, fontFamily: 'monospace', marginBottom: 10, lineHeight: 16 },
+  painelCoords:    { color: '#356B49', fontSize: 11, fontFamily: 'ShareTechMono_400Regular', marginBottom: 6 },
+  painelEndereco:  { color: '#2E6B45', fontSize: 10, fontFamily: 'ShareTechMono_400Regular', marginBottom: 10, lineHeight: 16 },
   endLoading:      { alignSelf: 'flex-start', marginBottom: 10 },
   painelSeparador: { height: 1, backgroundColor: 'rgba(255,214,10,0.15)', marginBottom: 12 },
   painelInput: {
@@ -386,7 +386,7 @@ const s = StyleSheet.create({
     padding: 12,
     fontSize: 13,
     color: '#C2E8CE',
-    fontFamily: 'monospace',
+    fontFamily: 'ShareTechMono_400Regular',
     letterSpacing: 1,
     marginBottom: 12,
   },
@@ -400,7 +400,7 @@ const s = StyleSheet.create({
     padding: 14,
     paddingBottom: 20,
   },
-  painelArmaTitulo: { color: '#ff2d55', fontSize: 10, fontWeight: '900', letterSpacing: 2, fontFamily: 'monospace', marginBottom: 10 },
+  painelArmaTitulo: { color: '#ff2d55', fontSize: 10, fontWeight: '900', letterSpacing: 2, fontFamily: 'ShareTechMono_400Regular', marginBottom: 10 },
   painelArmaSep:    { height: 1, backgroundColor: 'rgba(255,45,85,0.15)', marginBottom: 10 },
 
   armaBtn: {
@@ -413,9 +413,9 @@ const s = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.02)',
   },
   armaInfo:      { flex: 1 },
-  armaNome:      { fontSize: 11, fontWeight: '900', letterSpacing: 1, fontFamily: 'monospace', marginBottom: 2 },
-  armaTipo:      { fontSize: 9, fontFamily: 'monospace', letterSpacing: 1, marginBottom: 3 },
-  armaRaio:      { color: '#2E6B45', fontSize: 9, fontFamily: 'monospace', letterSpacing: 0.5 },
+  armaNome:      { fontSize: 11, fontWeight: '900', letterSpacing: 1, fontFamily: 'ShareTechMono_400Regular', marginBottom: 2 },
+  armaTipo:      { fontSize: 9, fontFamily: 'ShareTechMono_400Regular', letterSpacing: 1, marginBottom: 3 },
+  armaRaio:      { color: '#2E6B45', fontSize: 9, fontFamily: 'ShareTechMono_400Regular', letterSpacing: 0.5 },
   armaIcone:     { fontSize: 16, fontWeight: '900' },
 
   armaAtivaHeader: {
@@ -424,21 +424,21 @@ const s = StyleSheet.create({
     alignItems: 'flex-start',
     marginBottom: 10,
   },
-  armaAtivaNome: { fontSize: 14, fontWeight: '900', letterSpacing: 1, fontFamily: 'monospace', marginBottom: 3 },
-  armaAtivaTipo: { fontSize: 9, fontFamily: 'monospace', letterSpacing: 1 },
+  armaAtivaNome: { fontSize: 14, fontWeight: '900', letterSpacing: 1, fontFamily: 'ShareTechMono_400Regular', marginBottom: 3 },
+  armaAtivaTipo: { fontSize: 9, fontFamily: 'ShareTechMono_400Regular', letterSpacing: 1 },
   armaAtivaSep:  { borderTopWidth: 1, marginBottom: 10 },
 
   armaDetalheGrid: { flexDirection: 'row', gap: 16, marginBottom: 10 },
   armaDetalheCol:  { flex: 1 },
   armaDetalheLabel: {
-    color: '#2E6B45', fontSize: 8, fontFamily: 'monospace',
+    color: '#2E6B45', fontSize: 8, fontFamily: 'ShareTechMono_400Regular',
     letterSpacing: 1.5, marginBottom: 2,
   },
   armaDetalheValor: {
-    fontSize: 11, fontWeight: '900', fontFamily: 'monospace', letterSpacing: 1,
+    fontSize: 11, fontWeight: '900', fontFamily: 'ShareTechMono_400Regular', letterSpacing: 1,
   },
   armaDesc: {
-    color: '#356B49', fontSize: 10, fontFamily: 'monospace',
+    color: '#356B49', fontSize: 10, fontFamily: 'ShareTechMono_400Regular',
     letterSpacing: 0.5, lineHeight: 15, marginTop: 4,
     paddingLeft: 0,
   },
@@ -450,7 +450,7 @@ const s = StyleSheet.create({
     paddingHorizontal: 12,
     marginLeft: 10,
   },
-  mudarArmaTxt: { fontSize: 10, fontWeight: '900', letterSpacing: 1, fontFamily: 'monospace' },
+  mudarArmaTxt: { fontSize: 10, fontWeight: '900', letterSpacing: 1, fontFamily: 'ShareTechMono_400Regular' },
 
   simularBtn: {
     marginTop: 14,
@@ -460,5 +460,5 @@ const s = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(255,255,255,0.03)',
   },
-  simularBtnTxt: { fontSize: 13, fontWeight: '900', letterSpacing: 2, fontFamily: 'monospace' },
+  simularBtnTxt: { fontSize: 13, fontWeight: '900', letterSpacing: 2, fontFamily: 'ShareTechMono_400Regular' },
 });

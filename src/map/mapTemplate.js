@@ -15,12 +15,28 @@ export function buildMapHtml(lat, lng, salvos, alvoFoco = null) {
 <html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Share Tech Mono', monospace; }
     body { background: #0B0F0C; }
     #map { width: 100vw; height: 100vh; }
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 10001;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.04) 2px,
+        rgba(0,0,0,0.04) 4px
+      );
+    }
 
     .leaflet-popup-content-wrapper {
       background: rgba(7,9,15,0.92);
@@ -415,7 +431,9 @@ export function buildMapHtml(lat, lng, salvos, alvoFoco = null) {
     }
 
     function animIncoming(lat, lng, color, travelMs, onArrival) {
-      var startLat = lat + 0.06; var startLng = lng - 0.02;
+      var angle = Math.random() * Math.PI * 2;
+      var startLat = lat + 0.07 * Math.cos(angle);
+      var startLng = lng + 0.07 * Math.sin(angle);
       map.setView([lat, lng], map.getZoom(), { animate: true, duration: 0.4 });
       var dot = L.circleMarker([startLat, startLng], {
         radius: 4, color: color, fillColor: '#ffffff', fillOpacity: 1, opacity: 1, weight: 2,
@@ -456,6 +474,21 @@ export function buildMapHtml(lat, lng, salvos, alvoFoco = null) {
       }, delayMs);
     }
 
+    function animCrater(lat, lng, r, color, fadeMs, delayMs) {
+      setTimeout(function() {
+        var crater = L.circle([lat, lng], {
+          radius: r, color: color, weight: 1, opacity: 0.55,
+          fillColor: color, fillOpacity: 0.08, dashArray: '4, 6',
+        }).addTo(map);
+        var t0 = Date.now();
+        var iv = setInterval(function() {
+          var p = Math.min((Date.now() - t0) / fadeMs, 1);
+          crater.setStyle({ opacity: 0.55 * (1 - p), fillOpacity: 0.08 * (1 - p) });
+          if (p >= 1) { clearInterval(iv); map.removeLayer(crater); }
+        }, 100);
+      }, delayMs);
+    }
+
     function animGranada(lat, lng) {
       map.setView([lat, lng], 18, { animate: true, duration: 0.4 });
       screenFlash('rgba(255,214,10,0.8)', 80, 350);
@@ -465,6 +498,7 @@ export function buildMapHtml(lat, lng, salvos, alvoFoco = null) {
       animDebris(lat, lng, 8, 12, '#ffd60a', 1000, 0);
       animSmoke(lat, lng, 18, 2500, 300);
       animPulseRing(lat, lng, 15, '#ffd60a', 3, 400, 100);
+      animCrater(lat, lng, 5, '#ffd60a', 8000, 500);
     }
 
     function animRPG(lat, lng) {
@@ -477,6 +511,7 @@ export function buildMapHtml(lat, lng, salvos, alvoFoco = null) {
         animDebris(lat, lng, 12, 100, '#ff9500', 1500, 0);
         animSmoke(lat, lng, 160, 4000, 400);
         animPulseRing(lat, lng, 80, '#ff9500', 4, 500, 200);
+        animCrater(lat, lng, 60, '#ff9500', 10000, 500);
       });
     }
 
@@ -495,40 +530,43 @@ export function buildMapHtml(lat, lng, salvos, alvoFoco = null) {
         animSmoke(lat, lng, 500, 6000, 600);
         animSmoke(lat, lng, 300, 5000, 1200);
         animPulseRing(lat, lng, 200, '#ff6000', 5, 600, 300);
+        animCrater(lat, lng, 200, '#ff6000', 15000, 800);
       });
     }
 
     function animMOAB(lat, lng) {
       map.setView([lat, lng], 12, { animate: true, duration: 1.0 });
-      screenFlash('rgba(255,45,85,0.4)', 150, 800);
-      setTimeout(function() { screenFlash('rgba(255,45,85,0.85)', 400, 2500); }, 300);
-      animRing(lat, lng, 10,  300,  '#ffffff', 4, 1.0, 1200,    0);
-      animRing(lat, lng, 10, 1600,  '#ff2d55', 3, 1.0, 5500,    0);
-      animRing(lat, lng, 10, 1200,  '#ff6600', 2, 0.9, 4500,    0);
-      animRing(lat, lng, 10,  800,  '#ffaa00', 2, 0.85,3500,    0);
-      animRing(lat, lng, 10,  400,  '#ffdd88', 2, 0.8, 2500,    0);
-      animRing(lat, lng, 400, 1700, '#ff2d55', 1, 0.45,3500,  700);
-      animRing(lat, lng, 600, 1800, '#cc2244', 1, 0.3, 3000, 1100);
-      animRing(lat, lng, 900, 1900, '#881133', 1, 0.2, 2800, 1600);
-      animSmoke(lat, lng, 1400, 9000, 800);
-      animSmoke(lat, lng, 900,  8000, 1500);
-      animSmoke(lat, lng, 500,  7000, 2000);
-      animPulseRing(lat, lng, 600, '#ff2d55', 6, 700, 400);
-      animDebris(lat, lng, 20, 800, '#ff6600', 3000, 0);
-      // ondas de sobrepressão em sequência
-      for (var i = 0; i < 4; i++) {
-        animRing(lat, lng, 300 + i*80, 1700, '#ff4466', 1, 0.3, 2500, 800 + i*300);
-      }
+      animIncoming(lat, lng, '#ff2d55', 1800, function() {
+        screenFlash('rgba(255,45,85,0.4)', 150, 800);
+        setTimeout(function() { screenFlash('rgba(255,45,85,0.85)', 400, 2500); }, 300);
+        animRing(lat, lng, 10,  300,  '#ffffff', 4, 1.0, 1200,    0);
+        animRing(lat, lng, 10, 1600,  '#ff2d55', 3, 1.0, 5500,    0);
+        animRing(lat, lng, 10, 1200,  '#ff6600', 2, 0.9, 4500,    0);
+        animRing(lat, lng, 10,  800,  '#ffaa00', 2, 0.85,3500,    0);
+        animRing(lat, lng, 10,  400,  '#ffdd88', 2, 0.8, 2500,    0);
+        animRing(lat, lng, 400, 1700, '#ff2d55', 1, 0.45,3500,  700);
+        animRing(lat, lng, 600, 1800, '#cc2244', 1, 0.3, 3000, 1100);
+        animRing(lat, lng, 900, 1900, '#881133', 1, 0.2, 2800, 1600);
+        animSmoke(lat, lng, 1400, 9000, 800);
+        animSmoke(lat, lng, 900,  8000, 1500);
+        animSmoke(lat, lng, 500,  7000, 2000);
+        animPulseRing(lat, lng, 600, '#ff2d55', 6, 700, 400);
+        animDebris(lat, lng, 20, 800, '#ff6600', 3000, 0);
+        animCrater(lat, lng, 500, '#ff2d55', 20000, 1000);
+        for (var i = 0; i < 4; i++) {
+          animRing(lat, lng, 300 + i*80, 1700, '#ff4466', 1, 0.3, 2500, 800 + i*300);
+        }
+      });
     }
 
     function animNuclear(lat, lng) {
       map.setView([lat, lng], 10, { animate: true, duration: 1.2 });
-      // Warning blinks
+      // Warning blinks during incoming travel
       screenFlash('rgba(200,0,255,0.25)', 150, 200);
       setTimeout(function() { screenFlash('rgba(200,0,255,0.35)', 150, 200); }, 400);
       setTimeout(function() { screenFlash('rgba(200,0,255,0.45)', 150, 200); }, 800);
-      // Detonação
-      setTimeout(function() {
+      animIncoming(lat, lng, '#cc00ff', 1000, function() {
+        // Detonação
         screenFlash('rgba(255,255,255,0.99)', 600, 3500);
         setTimeout(function() { screenFlash('rgba(255,100,0,0.35)', 300, 4000); }, 700);
         setTimeout(function() { screenFlash('rgba(200,0,255,0.2)', 200, 5000); }, 1200);
@@ -566,7 +604,8 @@ export function buildMapHtml(lat, lng, salvos, alvoFoco = null) {
           }, 150);
         }, 5000);
         animPulseRing(lat, lng, 3000, '#cc00ff', 8, 800, 500);
-      }, 1000);
+        animCrater(lat, lng, 1500, '#cc00ff', 30000, 2000);
+      });
     }
 
     function simularAtaque(armaId, lat, lng) {

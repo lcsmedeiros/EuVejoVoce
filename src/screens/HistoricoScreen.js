@@ -4,6 +4,7 @@ import {
   Alert, StyleSheet, RefreshControl, Share,
 } from 'react-native';
 import { buscarLocalizacoes, deletarLocalizacao } from '../database/db';
+import TacCard from '../components/TacCard';
 
 export default function HistoricoScreen({ onBack, onVerNoMapa }) {
   const [registros, setRegistros] = useState([]);
@@ -57,7 +58,7 @@ export default function HistoricoScreen({ onBack, onVerNoMapa }) {
           <Text style={s.vazio}>[ NENHUM ALVO MARCADO ]</Text>
         }
         renderItem={({ item }) => (
-          <View style={s.card}>
+          <TacCard style={{ padding: 16, marginBottom: 10 }}>
             <View style={s.cardTopo}>
               <Text style={s.rotulo}>{item.label || '(SEM IDENTIFICAÇÃO)'}</Text>
               <TouchableOpacity onPress={() => confirmarDeletar(item.id)}>
@@ -94,7 +95,7 @@ export default function HistoricoScreen({ onBack, onVerNoMapa }) {
                 <Text style={s.botaoAcaoTexto}>COMPARTILHAR</Text>
               </TouchableOpacity>
             </View>
-          </View>
+          </TacCard>
         )}
       />
     </View>
@@ -104,34 +105,21 @@ export default function HistoricoScreen({ onBack, onVerNoMapa }) {
 const s = StyleSheet.create({
   container:  { flex: 1, backgroundColor: '#0B0F0C', paddingHorizontal: 20 },
   header:     { paddingTop: 48, marginBottom: 20 },
-  voltar:     { color: '#2E6B45', fontSize: 12, marginBottom: 12, fontFamily: 'monospace', letterSpacing: 2 },
+  voltar:     { color: '#2E6B45', fontSize: 12, marginBottom: 12, fontFamily: 'ShareTechMono_400Regular', letterSpacing: 2 },
   titulo:     { fontSize: 18, fontWeight: '900', color: '#00FF66', letterSpacing: 3, marginBottom: 4 },
-  contagem:   { color: '#2E6B45', fontSize: 10, letterSpacing: 2, fontFamily: 'monospace', marginBottom: 10 },
+  contagem:   { color: '#2E6B45', fontSize: 10, letterSpacing: 2, fontFamily: 'ShareTechMono_400Regular', marginBottom: 10 },
   headerLine: { height: 1, backgroundColor: 'rgba(0, 255, 102, 0.2)' },
-  vazio:      { color: '#2E6B45', textAlign: 'center', marginTop: 48, fontSize: 12, fontFamily: 'monospace', letterSpacing: 1 },
+  vazio:      { color: '#2E6B45', textAlign: 'center', marginTop: 48, fontSize: 12, fontFamily: 'ShareTechMono_400Regular', letterSpacing: 1 },
 
-  card: {
-    backgroundColor: '#12181A',
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: 'rgba(0, 255, 102, 0.12)',
-    padding: 16,
-    marginBottom: 10,
-    shadowColor: '#00FF66',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.25,
-    shadowRadius: 6,
-    elevation: 3,
-  },
   cardTopo:   { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 },
   rotulo:     { color: '#C2E8CE', fontWeight: '700', fontSize: 14, flex: 1, letterSpacing: 1 },
   deletar:    { color: '#ff2d55', fontSize: 16, paddingLeft: 12 },
   endereco:   { color: '#356B49', fontSize: 12, marginBottom: 8 },
   separador:  { height: 1, backgroundColor: 'rgba(0, 255, 102, 0.06)', marginVertical: 8 },
-  coords:     { color: '#00FF66', fontFamily: 'monospace', fontSize: 12, marginBottom: 6 },
+  coords:     { color: '#00FF66', fontFamily: 'ShareTechMono_400Regular', fontSize: 12, marginBottom: 6 },
   metaRow:    { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 },
-  meta:       { color: '#2E6B45', fontSize: 11, fontFamily: 'monospace', letterSpacing: 1 },
-  data:       { color: '#2E6B45', fontSize: 11, fontFamily: 'monospace' },
+  meta:       { color: '#2E6B45', fontSize: 11, fontFamily: 'ShareTechMono_400Regular', letterSpacing: 1 },
+  data:       { color: '#2E6B45', fontSize: 11, fontFamily: 'ShareTechMono_400Regular' },
 
   acoes:      { flexDirection: 'row' },
   botaoAcao: {
